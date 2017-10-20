@@ -3,7 +3,8 @@
 
 GameObject::GameObject() :
     name("GameObject"),
-    parent(0)
+    parent(0),
+    initedCount(0)
 {
     addComponent<Transform>();
 }
@@ -23,6 +24,18 @@ void GameObject::addChild(GameObject * g) {
     g->parent = this;
 }
 
+GameObject * GameObject::getChid(unsigned int i) {
+    return children[i];
+}
+
+const GameObject * GameObject::getChid(unsigned int i) const {
+    return children[i];
+}
+
+unsigned int GameObject::childrenCount() const {
+    return (unsigned int)children.size();
+}
+
 void GameObject::destroy() {
     clear();
     if (parent != 0)
@@ -31,8 +44,12 @@ void GameObject::destroy() {
 }
 
 void GameObject::clear() {
-    while (components.size() > 0)
+    while (components.size() > 1)
+        components[1]->destroy();
+    if (components.size() > 0) {
         components[0]->destroy();
+        components.pop_back();
+    }
     while (children.size() > 0)
         children[0]->destroy();
 }
@@ -50,6 +67,22 @@ void GameObject::clone(GameObject * g) {
     g->name += "(Clone)";
 }
 
+void GameObject::update() {
+    if (components.size() == 0)
+        return;
+    std::vector<Component *> tmp_l(components);
+    for (size_t i = 0, sz_i = tmp_l.size(); i < sz_i; i++) {
+        for (size_t j = 0, sz_j = components.size(); j < sz_j; j++) {
+            if (tmp_l[i] == components[j]) {
+                tmp_l[i]->update();
+                break;
+            }
+        }
+    }
+    for (size_t i = 0, sz = children.size(); i < sz; i++)
+        children[i]->update();
+}
+
 void GameObject::paintGL(QOpenGLShaderProgram *program, const QMatrix4x4& matrix) {
     Geometry * geometry = getComponent<Geometry>();
     if (geometry != 0) {
@@ -62,10 +95,12 @@ void GameObject::paintGL(QOpenGLShaderProgram *program, const QMatrix4x4& matrix
 
         geometry->draw(program);
     }
+    for (size_t i = 0, sz = children.size(); i < sz; i++)
+        children[i]->paintGL(program, matrix);
 }
 
 void GameObject::removeChild(GameObject * g) {
-    for (size_t i = 1, sz = children.size(); i < sz; i++) {
+    for (size_t i = 0, sz = children.size(); i < sz; i++) {
         if (g == children[i]) {
             children.erase(children.begin() + i);
             break;

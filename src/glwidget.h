@@ -36,9 +36,6 @@ private:
     // Timer d'update
     QBasicTimer updateTimer;
 
-    // Timer inter-update
-    QElapsedTimer elapsedTimer;
-
     // Shader
     QOpenGLShaderProgram program;
 

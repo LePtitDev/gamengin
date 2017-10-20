@@ -24,6 +24,9 @@ private:
     // GameObject components
     std::vector<Component *> components;
 
+    // Inited component count
+    int initedCount;
+
 public:
 
     // GameObject name
@@ -90,6 +93,15 @@ public:
     // Add a GameObject
     void addChild(GameObject * g);
 
+    // Get a child
+    GameObject * getChid(unsigned int i);
+
+    // Get a child
+    const GameObject * getChid(unsigned int i) const;
+
+    // Get children count
+    unsigned int childrenCount() const;
+
     // Destroy a GameObject
     void destroy();
 
@@ -98,6 +110,9 @@ public:
 
     // Clone a GameObject
     void clone(GameObject * g);
+
+    // Update callback
+    void update();
 
     // Called when OpenGL rendering
     void paintGL(QOpenGLShaderProgram *program, const QMatrix4x4& matrix);

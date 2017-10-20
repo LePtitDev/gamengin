@@ -34,7 +34,9 @@ SOURCES += \
     src/gameobject/geometry.cpp \
     src/gameobject/particle_system.cpp \
     src/geometry/mesh.cpp \
-    src/geometry/shapes.cpp
+    src/geometry/shapes.cpp \
+    src/gameobject/material.cpp \
+    src/gameobject/rigidbody.cpp
 
 HEADERS += \
 	src/mainwindow.h \
@@ -45,7 +47,9 @@ HEADERS += \
     src/gameobject/geometry.h \
     src/gameobject/particle_system.h \
     src/geometry/mesh.h \
-    src/geometry/shapes.h
+    src/geometry/shapes.h \
+    src/gameobject/material.h \
+    src/gameobject/rigidbody.h
 
 FORMS += \
 	mainwindow.ui

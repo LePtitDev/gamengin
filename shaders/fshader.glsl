@@ -17,4 +17,3 @@ void main() {
 	// Assigne la couleur du fragment par rapport à la texture
     gl_FragColor = texture2D(texture, v_texcoord);
 }
-

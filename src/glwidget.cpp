@@ -1,5 +1,7 @@
 #include "glwidget.h"
 #include "gameobject/geometry.h"
+#include "gameobject/particle_system.h"
+#include "gameobject/rigidbody.h"
 #include "geometry/shapes.h"
 
 #include <iostream>
@@ -14,9 +16,6 @@ GLWidget::GLWidget(QWidget *parent) :
 {
     // On lance le timer d'update
     updateTimer.start(1000 / GLWidget::DefaultFrameRate, this);
-
-    // On lance le timer inter-update
-    elapsedTimer.start();
 }
 
 GLWidget::~GLWidget() {
@@ -63,8 +62,7 @@ void GLWidget::initTexture() {
 
 
 void GLWidget::timerEvent(QTimerEvent *e) {
-    // Relance le timer inter-update
-    this->elapsedTimer.restart();
+    gameObject.update();
 
     // Met à jour le rendu
     update();
@@ -86,9 +84,16 @@ void GLWidget::initializeGL() {
     initShaders();
     initTexture();
 
-    gameObject.transform().position.setZ(-5.0f);
-    gameObject.addComponent<Geometry>();
-    GeometryCube(gameObject.getComponent<Geometry>());
+    GameObject * particle = new GameObject();
+    //particle->transform().position.setY(+5.0f);
+    particle->transform().position.setZ(-5.0f);
+    GeometryCube(particle->addComponent<Geometry>());
+    particle->addComponent<Rigidbody>();
+    ParticleSystem * ps = gameObject.addComponent<ParticleSystem>();
+    Mesh tmp_m;
+    tmp_m.addVertex(QVector3D(), QVector2D());
+    ps->setEmitter(&tmp_m);
+    ps->setParticle(particle);
 }
 
 void GLWidget::resizeGL(int w, int h) {

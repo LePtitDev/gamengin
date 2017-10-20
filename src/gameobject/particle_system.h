@@ -48,11 +48,8 @@ public:
     // Basic constructor
     ParticleSystem(GameObject * parent);
 
-    // Start callback
-    void start();
-
     // Update callback
-    void update();
+    virtual void update() override;
     
     // Assign the particle emitter
     void setEmitter(Mesh * mesh);

@@ -47,4 +47,5 @@ Mesh& Mesh::operator=(const Mesh& m) {
     V = m.V;
     UV = m.UV;
     T = m.T;
+    return *this;
 }
