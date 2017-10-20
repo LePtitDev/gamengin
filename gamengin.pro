@@ -32,6 +32,7 @@ SOURCES += \
     src/gameobject/component.cpp \
     src/gameobject/transform.cpp \
     src/gameobject/geometry.cpp \
+    src/gameobject/particle_system.cpp \
     src/geometry/mesh.cpp \
     src/geometry/shapes.cpp
 
@@ -42,6 +43,7 @@ HEADERS += \
     src/gameobject/transform.h \
     src/gameobject/component.h \
     src/gameobject/geometry.h \
+    src/gameobject/particle_system.h \
     src/geometry/mesh.h \
     src/geometry/shapes.h
 

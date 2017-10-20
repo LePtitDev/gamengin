@@ -15,6 +15,12 @@ class GameObject {
 
 private:
 
+    // GameObject parent
+    GameObject * parent;
+
+    // GameObject children
+    std::vector<GameObject *> children;
+
     // GameObject components
     std::vector<Component *> components;
 
@@ -81,6 +87,12 @@ public:
         return res;
     }
 
+    // Add a GameObject
+    void addChild(GameObject * g);
+
+    // Destroy a GameObject
+    void destroy();
+
     // Clear the GameObject
     void clear();
 
@@ -91,6 +103,9 @@ public:
     void paintGL(QOpenGLShaderProgram *program, const QMatrix4x4& matrix);
 
 private:
+    
+    // Remove a child
+    void removeChild(GameObject * g);
 
     // Remove a component
     void removeComponent(void * component);
