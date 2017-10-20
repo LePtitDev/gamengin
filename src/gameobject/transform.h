@@ -30,6 +30,9 @@ public:
     // Component override
     virtual int component() const override;
 
+    // Component override
+    virtual void clone(GameObject * c) override;
+
     // Indicate if the componant is an instance of Transform
     static bool isInstance(Component * c);
 

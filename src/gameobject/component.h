@@ -27,6 +27,9 @@ public:
     // Return the component ID
     virtual int component() const = 0;
 
+    // Clone the component in an other GameObject
+    virtual void clone(GameObject * c) = 0;
+
 protected:
 
     // Remove the component in the GameObject

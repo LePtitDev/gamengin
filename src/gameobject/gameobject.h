@@ -4,6 +4,7 @@
 #include "transform.h"
 
 #include <vector>
+#include <string>
 
 #include <QMatrix4x4>
 #include <QOpenGLShaderProgram>
@@ -19,6 +20,9 @@ private:
 
 public:
 
+    // GameObject name
+    std::string name;
+
     // Basic constructor
     GameObject();
 
@@ -30,8 +34,9 @@ public:
 
     // Add a new component in the GameObject
     template <typename T>
-    void addComponent() {
+    T * addComponent() {
         components.push_back(new T(this));
+        return (T *)components.back();
     }
 
     // Get a component in the GameObject
@@ -75,6 +80,12 @@ public:
         }
         return res;
     }
+
+    // Clear the GameObject
+    void clear();
+
+    // Clone a GameObject
+    void clone(GameObject * g);
 
     // Called when OpenGL rendering
     void paintGL(QOpenGLShaderProgram *program, const QMatrix4x4& matrix);

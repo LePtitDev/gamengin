@@ -1,7 +1,9 @@
 #include "gameobject.h"
 #include "geometry.h"
 
-GameObject::GameObject() {
+GameObject::GameObject() :
+    name("GameObject")
+{
     addComponent<Transform>();
 }
 
@@ -20,6 +22,19 @@ void GameObject::removeComponent(void *component) {
             break;
         }
     }
+}
+
+void GameObject::clear() {
+    while (components.size() > 0)
+        components[0]->destroy();
+}
+
+void GameObject::clone(GameObject * g) {
+    g->clear();
+    for (size_t i = 0, sz = components.size(); i < sz; i++)
+        components[i]->clone(g);
+    g->name = name;
+    g->name += "(Clone)";
 }
 
 void GameObject::paintGL(QOpenGLShaderProgram *program, const QMatrix4x4& matrix) {
