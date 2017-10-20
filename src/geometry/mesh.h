@@ -52,6 +52,9 @@ public:
     // Get a triangle indexs
     const std::array<unsigned int, 3>& getTriangle(unsigned int i) const;
 
+    // Assign operator
+    Mesh& operator=(const Mesh& m);
+
 };
 
 #endif // MESH_H

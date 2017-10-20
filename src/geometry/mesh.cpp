@@ -42,3 +42,9 @@ std::array<unsigned int, 3>& Mesh::getTriangle(unsigned int i) {
 const std::array<unsigned int, 3>& Mesh::getTriangle(unsigned int i) const {
     return T[i];
 }
+
+Mesh& Mesh::operator=(const Mesh& m) {
+    V = m.V;
+    UV = m.UV;
+    T = m.T;
+}

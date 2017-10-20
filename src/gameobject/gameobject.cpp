@@ -27,6 +27,7 @@ void GameObject::destroy() {
     clear();
     if (parent != 0)
         parent->removeChild(this);
+    delete this;
 }
 
 void GameObject::clear() {
