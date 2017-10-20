@@ -39,12 +39,13 @@ private:
     // Shader
     QOpenGLShaderProgram program;
 
-    // Matrice de projection
-    QMatrix4x4 projection;
-
     // Texture
     QOpenGLTexture * texture;
 
+    // GameObject camera
+    GameObject camera;
+
+    // Current GameObject
     GameObject gameObject;
 
 public:

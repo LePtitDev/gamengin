@@ -1,7 +1,8 @@
 #include "glwidget.h"
 #include "gameobject/geometry.h"
-#include "gameobject/particle_system.h"
 #include "gameobject/rigidbody.h"
+#include "gameobject/camera.h"
+#include "gameobject/particle_system.h"
 #include "geometry/shapes.h"
 
 #include <iostream>
@@ -16,6 +17,10 @@ GLWidget::GLWidget(QWidget *parent) :
 {
     // On lance le timer d'update
     updateTimer.start(1000 / GLWidget::DefaultFrameRate, this);
+
+    camera.transform().position.setX(1.0f);
+    camera.transform().position.setY(1.0f);
+    camera.addComponent<Camera>()->lookAt(QVector3D(0.0f, 0.0f, -5.0f));
 }
 
 GLWidget::~GLWidget() {
@@ -64,6 +69,9 @@ void GLWidget::initTexture() {
 void GLWidget::timerEvent(QTimerEvent *e) {
     gameObject.update();
 
+    camera.transform().position += QVector3D(0.01f, 0.0f, 0.0f);
+    camera.getComponent<Camera>()->lookAt(QVector3D(0.0f, 0.0f, -5.0f));
+
     // Met à jour le rendu
     update();
 }
@@ -90,6 +98,7 @@ void GLWidget::initializeGL() {
     GeometryCube(particle->addComponent<Geometry>());
     particle->addComponent<Rigidbody>();
     ParticleSystem * ps = gameObject.addComponent<ParticleSystem>();
+    ps->ParticleDelay = 500;
     Mesh tmp_m;
     tmp_m.addVertex(QVector3D(), QVector2D());
     ps->setEmitter(&tmp_m);
@@ -97,17 +106,7 @@ void GLWidget::initializeGL() {
 }
 
 void GLWidget::resizeGL(int w, int h) {
-    // Calcule le rapport entre la largeur et la hauteur
-    qreal aspect = qreal(w) / qreal(h ? h : 1);
-
-    // Initialise les valeurs du FOV, du near et du far
-    const qreal zNear = 1.0, zFar = 30.0, fov = 45.0;
-
-    // Charge la matrice d'identitée
-    projection.setToIdentity();
-
-    // Ajoute une projection en perspective
-    projection.perspective(fov, aspect, zNear, zFar);
+    camera.getComponent<Camera>()->setAspect((float)w / (float)(h ? h : 1));
 }
 
 void GLWidget::paintGL() {
@@ -122,7 +121,7 @@ void GLWidget::paintGL() {
     texture->bind();
 
     // Matrice de transformation
-    QMatrix4x4 matrix(projection);
+    QMatrix4x4 matrix(camera.getComponent<Camera>()->Projection);
 
     // Assigne la texture dans le fragment shader
     program.setUniformValue("texture", 0);

@@ -3,40 +3,40 @@
 void GeometryCube(Geometry * component) {
     Mesh mesh;
     // Vertex for face 0
-    mesh.addVertex(QVector3D(-1.0f, -1.0f,  1.0f), QVector2D(0.0f, 0.0f));  // v0
-    mesh.addVertex(QVector3D( 1.0f, -1.0f,  1.0f), QVector2D(0.33f, 0.0f)); // v1
-    mesh.addVertex(QVector3D(-1.0f,  1.0f,  1.0f), QVector2D(0.0f, 0.5f));  // v2
-    mesh.addVertex(QVector3D( 1.0f,  1.0f,  1.0f), QVector2D(0.33f, 0.5f)); // v3
+    mesh.addVertex(QVector3D(-1.0f, -1.0f,  1.0f), QVector2D(0.0f, 0.0f)); // v0
+    mesh.addVertex(QVector3D( 1.0f, -1.0f,  1.0f), QVector2D(1.0f, 0.0f)); // v1
+    mesh.addVertex(QVector3D(-1.0f,  1.0f,  1.0f), QVector2D(0.0f, 1.0f)); // v2
+    mesh.addVertex(QVector3D( 1.0f,  1.0f,  1.0f), QVector2D(1.0f, 1.0f)); // v3
 
     // Vertex for face 1
-    mesh.addVertex(QVector3D( 1.0f, -1.0f,  1.0f), QVector2D( 0.0f, 0.5f)); // v4
-    mesh.addVertex(QVector3D( 1.0f, -1.0f, -1.0f), QVector2D(0.33f, 0.5f)); // v5
-    mesh.addVertex(QVector3D( 1.0f,  1.0f,  1.0f), QVector2D(0.0f, 1.0f));  // v6
-    mesh.addVertex(QVector3D( 1.0f,  1.0f, -1.0f), QVector2D(0.33f, 1.0f)); // v7
+    mesh.addVertex(QVector3D( 1.0f, -1.0f,  1.0f), QVector2D(0.0f, 0.0f)); // v4
+    mesh.addVertex(QVector3D( 1.0f, -1.0f, -1.0f), QVector2D(1.0f, 0.0f)); // v5
+    mesh.addVertex(QVector3D( 1.0f,  1.0f,  1.0f), QVector2D(0.0f, 1.0f)); // v6
+    mesh.addVertex(QVector3D( 1.0f,  1.0f, -1.0f), QVector2D(1.0f, 1.0f)); // v7
 
     // Vertex for face 2
-    mesh.addVertex(QVector3D( 1.0f, -1.0f, -1.0f), QVector2D(0.66f, 0.5f)); // v8
-    mesh.addVertex(QVector3D(-1.0f, -1.0f, -1.0f), QVector2D(1.0f, 0.5f));  // v9
-    mesh.addVertex(QVector3D( 1.0f,  1.0f, -1.0f), QVector2D(0.66f, 1.0f)); // v10
-    mesh.addVertex(QVector3D(-1.0f,  1.0f, -1.0f), QVector2D(1.0f, 1.0f));  // v11
+    mesh.addVertex(QVector3D( 1.0f, -1.0f, -1.0f), QVector2D(0.0f, 0.0f)); // v8
+    mesh.addVertex(QVector3D(-1.0f, -1.0f, -1.0f), QVector2D(1.0f, 0.0f)); // v9
+    mesh.addVertex(QVector3D( 1.0f,  1.0f, -1.0f), QVector2D(0.0f, 1.0f)); // v10
+    mesh.addVertex(QVector3D(-1.0f,  1.0f, -1.0f), QVector2D(1.0f, 1.0f)); // v11
 
     // Vertex for face 3
-    mesh.addVertex(QVector3D(-1.0f, -1.0f, -1.0f), QVector2D(0.66f, 0.0f)); // v12
-    mesh.addVertex(QVector3D(-1.0f, -1.0f,  1.0f), QVector2D(1.0f, 0.0f));  // v13
-    mesh.addVertex(QVector3D(-1.0f,  1.0f, -1.0f), QVector2D(0.66f, 0.5f)); // v14
-    mesh.addVertex(QVector3D(-1.0f,  1.0f,  1.0f), QVector2D(1.0f, 0.5f));  // v15
+    mesh.addVertex(QVector3D(-1.0f, -1.0f, -1.0f), QVector2D(0.0f, 0.0f)); // v12
+    mesh.addVertex(QVector3D(-1.0f, -1.0f,  1.0f), QVector2D(1.0f, 0.0f)); // v13
+    mesh.addVertex(QVector3D(-1.0f,  1.0f, -1.0f), QVector2D(0.0f, 1.0f)); // v14
+    mesh.addVertex(QVector3D(-1.0f,  1.0f,  1.0f), QVector2D(1.0f, 1.0f)); // v15
 
     // Vertex for face 4
-    mesh.addVertex(QVector3D(-1.0f, -1.0f, -1.0f), QVector2D(0.33f, 0.0f)); // v16
-    mesh.addVertex(QVector3D( 1.0f, -1.0f, -1.0f), QVector2D(0.66f, 0.0f)); // v17
-    mesh.addVertex(QVector3D(-1.0f, -1.0f,  1.0f), QVector2D(0.33f, 0.5f)); // v18
-    mesh.addVertex(QVector3D( 1.0f, -1.0f,  1.0f), QVector2D(0.66f, 0.5f)); // v19
+    mesh.addVertex(QVector3D(-1.0f, -1.0f, -1.0f), QVector2D(0.0f, 0.0f)); // v16
+    mesh.addVertex(QVector3D( 1.0f, -1.0f, -1.0f), QVector2D(1.0f, 0.0f)); // v17
+    mesh.addVertex(QVector3D(-1.0f, -1.0f,  1.0f), QVector2D(0.0f, 1.0f)); // v18
+    mesh.addVertex(QVector3D( 1.0f, -1.0f,  1.0f), QVector2D(1.0f, 1.0f)); // v19
 
     // Vertex for face 5
-    mesh.addVertex(QVector3D(-1.0f,  1.0f,  1.0f), QVector2D(0.33f, 0.5f)); // v20
-    mesh.addVertex(QVector3D( 1.0f,  1.0f,  1.0f), QVector2D(0.66f, 0.5f)); // v21
-    mesh.addVertex(QVector3D(-1.0f,  1.0f, -1.0f), QVector2D(0.33f, 1.0f)); // v22
-    mesh.addVertex(QVector3D( 1.0f,  1.0f, -1.0f), QVector2D(0.66f, 1.0f)); // v23
+    mesh.addVertex(QVector3D(-1.0f,  1.0f,  1.0f), QVector2D(0.0f, 0.0f)); // v20
+    mesh.addVertex(QVector3D( 1.0f,  1.0f,  1.0f), QVector2D(1.0f, 0.0f)); // v21
+    mesh.addVertex(QVector3D(-1.0f,  1.0f, -1.0f), QVector2D(0.0f, 1.0f)); // v22
+    mesh.addVertex(QVector3D( 1.0f,  1.0f, -1.0f), QVector2D(1.0f, 1.0f)); // v23
 
     // Face 0 - triangle strip ( v0,  v1,  v2,  v3)
     mesh.addTriangle(0, 1, 2);
@@ -57,5 +57,16 @@ void GeometryCube(Geometry * component) {
     mesh.addTriangle(20, 21, 22);
     mesh.addTriangle(21, 23, 22);
 
+    component->setMesh(mesh);
+}
+
+void GeometryPlane(Geometry * component) {
+    Mesh mesh;
+    mesh.addVertex(QVector3D(-1.0f, 0.0f, -1.0f), QVector2D(0.0f, 0.0f));
+    mesh.addVertex(QVector3D( 1.0f, 0.0f, -1.0f), QVector2D(1.0f, 0.0f));
+    mesh.addVertex(QVector3D(-1.0f, 0.0f,  1.0f), QVector2D(0.0f, 1.0f));
+    mesh.addVertex(QVector3D( 1.0f, 0.0f,  1.0f), QVector2D(1.0f, 1.0f));
+    mesh.addTriangle(0, 1, 2);
+    mesh.addTriangle(1, 3, 2);
     component->setMesh(mesh);
 }
