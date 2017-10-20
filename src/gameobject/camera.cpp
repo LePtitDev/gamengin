@@ -91,7 +91,7 @@ void Camera::calculateProjection() {
     if (perspective)
         projection.perspective(fov, aspect, zNear, zFar);
     else
-        projection.ortho(-aspect, aspect, -1.0f, 1.0f, zNear, zFar);
+        projection.ortho(-2.0f * aspect, 2.0f * aspect, -2.0f, 2.0f, zNear, zFar);
     Transform& t = gameObject().transform();
     projection.lookAt(t.position, t.position + t.rotation * QVector3D(0.0f, 0.0f, 1.0f), t.rotation * QVector3D(0.0f, 1.0f, 0.0f));
 }
