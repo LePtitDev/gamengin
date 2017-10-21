@@ -3,6 +3,8 @@
 
 #include "gameobject/gameobject.h"
 
+#include <memory>
+
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
@@ -28,9 +30,6 @@ public:
     // Fragment shader par défaut
     static const char * DefaultFShader;
 
-    // Texture par défaut
-    static const char * DefaultTexture;
-
 private:
 
     // Timer d'update
@@ -40,13 +39,13 @@ private:
     QOpenGLShaderProgram program;
 
     // Texture
-    QOpenGLTexture * texture;
+    std::shared_ptr<QOpenGLTexture> texture;
 
     // GameObject camera
-    GameObject camera;
+    GameObject * camera;
 
     // Current GameObject
-    GameObject gameObject;
+    GameObject * gameObject;
 
 public:
 
@@ -68,6 +67,24 @@ protected:
 
     // Appelé lors d'un update
     void timerEvent(QTimerEvent *e) override;
+
+    // Key press event callback
+    void keyPressEvent(QKeyEvent * event) override;
+
+    // Key release event callback
+    void keyReleaseEvent(QKeyEvent * event) override;
+
+    // Mouse press event callback
+    void mousePressEvent(QMouseEvent * event) override;
+
+    // Mouse release event callback
+    void mouseReleaseEvent(QMouseEvent * event) override;
+
+    // Mouse move event callback
+    void mouseMoveEvent(QMouseEvent * event) override;
+
+    // Mouse wheel event callback
+    void wheelEvent(QWheelEvent * event) override;
 
     // Initialise les éléments liés à OpenGL
     void initializeGL() override;

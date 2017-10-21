@@ -30,6 +30,8 @@ int Rigidbody::component() const {
 
 void Rigidbody::clone(GameObject *c) {
     Rigidbody * r = c->addComponent<Rigidbody>();
+    r->gravity = gravity;
+    r->velocity = velocity;
 }
 
 bool Rigidbody::isInstance(Component *c) {

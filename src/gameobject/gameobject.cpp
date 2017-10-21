@@ -1,5 +1,6 @@
 #include "gameobject.h"
 #include "geometry.h"
+#include "material.h"
 
 GameObject::GameObject() :
     name("GameObject"),
@@ -83,9 +84,108 @@ void GameObject::update() {
         children[i]->update();
 }
 
+void GameObject::keyPressEvent(QKeyEvent * event) {
+    if (components.size() == 0)
+        return;
+    std::vector<Component *> tmp_l(components);
+    for (size_t i = 0, sz_i = tmp_l.size(); i < sz_i; i++) {
+        for (size_t j = 0, sz_j = components.size(); j < sz_j; j++) {
+            if (tmp_l[i] == components[j]) {
+                tmp_l[i]->keyPressEvent(event);
+                break;
+            }
+        }
+    }
+    for (size_t i = 0, sz = children.size(); i < sz; i++)
+        children[i]->keyPressEvent(event);
+}
+
+void GameObject::keyReleaseEvent(QKeyEvent * event) {
+    if (components.size() == 0)
+        return;
+    std::vector<Component *> tmp_l(components);
+    for (size_t i = 0, sz_i = tmp_l.size(); i < sz_i; i++) {
+        for (size_t j = 0, sz_j = components.size(); j < sz_j; j++) {
+            if (tmp_l[i] == components[j]) {
+                tmp_l[i]->keyReleaseEvent(event);
+                break;
+            }
+        }
+    }
+    for (size_t i = 0, sz = children.size(); i < sz; i++)
+        children[i]->keyReleaseEvent(event);
+}
+
+void GameObject::mousePressEvent(QMouseEvent * event) {
+    if (components.size() == 0)
+        return;
+    std::vector<Component *> tmp_l(components);
+    for (size_t i = 0, sz_i = tmp_l.size(); i < sz_i; i++) {
+        for (size_t j = 0, sz_j = components.size(); j < sz_j; j++) {
+            if (tmp_l[i] == components[j]) {
+                tmp_l[i]->mousePressEvent(event);
+                break;
+            }
+        }
+    }
+    for (size_t i = 0, sz = children.size(); i < sz; i++)
+        children[i]->mousePressEvent(event);
+}
+
+void GameObject::mouseReleaseEvent(QMouseEvent * event) {
+    if (components.size() == 0)
+        return;
+    std::vector<Component *> tmp_l(components);
+    for (size_t i = 0, sz_i = tmp_l.size(); i < sz_i; i++) {
+        for (size_t j = 0, sz_j = components.size(); j < sz_j; j++) {
+            if (tmp_l[i] == components[j]) {
+                tmp_l[i]->mouseReleaseEvent(event);
+                break;
+            }
+        }
+    }
+    for (size_t i = 0, sz = children.size(); i < sz; i++)
+        children[i]->mouseReleaseEvent(event);
+}
+
+void GameObject::mouseMoveEvent(QMouseEvent * event) {
+    if (components.size() == 0)
+        return;
+    std::vector<Component *> tmp_l(components);
+    for (size_t i = 0, sz_i = tmp_l.size(); i < sz_i; i++) {
+        for (size_t j = 0, sz_j = components.size(); j < sz_j; j++) {
+            if (tmp_l[i] == components[j]) {
+                tmp_l[i]->mouseMoveEvent(event);
+                break;
+            }
+        }
+    }
+    for (size_t i = 0, sz = children.size(); i < sz; i++)
+        children[i]->mouseMoveEvent(event);
+}
+
+void GameObject::wheelEvent(QWheelEvent * event) {
+    if (components.size() == 0)
+        return;
+    std::vector<Component *> tmp_l(components);
+    for (size_t i = 0, sz_i = tmp_l.size(); i < sz_i; i++) {
+        for (size_t j = 0, sz_j = components.size(); j < sz_j; j++) {
+            if (tmp_l[i] == components[j]) {
+                tmp_l[i]->wheelEvent(event);
+                break;
+            }
+        }
+    }
+    for (size_t i = 0, sz = children.size(); i < sz; i++)
+        children[i]->wheelEvent(event);
+}
+
 void GameObject::paintGL(QOpenGLShaderProgram *program, const QMatrix4x4& matrix) {
     Geometry * geometry = getComponent<Geometry>();
     if (geometry != 0) {
+        Material * mat = getComponent<Material>();
+        if (mat != 0)
+            mat->paintGL(program);
         Transform * transform = getComponent<Transform>();
         QMatrix4x4 projection(matrix);
         projection.translate(transform->position);

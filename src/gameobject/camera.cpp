@@ -29,38 +29,48 @@ QMatrix4x4 Camera::getProjection() const {
 
 void Camera::toggleView() {
     perspective = !perspective;
-    calculateProjection();
+    refresh();
 }
 
 void Camera::toggleView(bool p) {
     perspective = p;
-    calculateProjection();
+    refresh();
 }
 
 void Camera::setFOV(float f) {
     fov = f;
-    calculateProjection();
+    refresh();
 }
 
 void Camera::setNear(float n) {
     zNear = n;
-    calculateProjection();
+    refresh();
 }
 
 void Camera::setFar(float f) {
     zFar = f;
-    calculateProjection();
+    refresh();
 }
 
 void Camera::setAspect(float a) {
     aspect = a;
-    calculateProjection();
+    refresh();
 }
 
 void Camera::lookAt(QVector3D pos) {
     Transform& t = gameObject().transform();
     t.rotation = QQuaternion::fromDirection(pos - t.position, QVector3D(0.0f, 1.0f, 0.0f));
-    calculateProjection();
+    refresh();
+}
+
+void Camera::refresh() {
+    projection.setToIdentity();
+    if (perspective)
+        projection.perspective(fov, aspect, zNear, zFar);
+    else
+        projection.ortho(-2.0f * aspect, 2.0f * aspect, -2.0f, 2.0f, zNear, zFar);
+    Transform& t = gameObject().transform();
+    projection.lookAt(t.position, t.position + t.rotation * QVector3D(0.0f, 0.0f, 1.0f), t.rotation * QVector3D(0.0f, 1.0f, 0.0f));
 }
 
 void Camera::destroy() {
@@ -84,14 +94,4 @@ void Camera::clone(GameObject *c) {
 
 bool Camera::isInstance(Component *c) {
     return (c->component() == COMPONENT_CAMERA_ID);
-}
-
-void Camera::calculateProjection() {
-    projection.setToIdentity();
-    if (perspective)
-        projection.perspective(fov, aspect, zNear, zFar);
-    else
-        projection.ortho(-2.0f * aspect, 2.0f * aspect, -2.0f, 2.0f, zNear, zFar);
-    Transform& t = gameObject().transform();
-    projection.lookAt(t.position, t.position + t.rotation * QVector3D(0.0f, 0.0f, 1.0f), t.rotation * QVector3D(0.0f, 1.0f, 0.0f));
 }

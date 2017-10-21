@@ -114,6 +114,24 @@ public:
     // Update callback
     void update();
 
+    // Key press event callback
+    void keyPressEvent(QKeyEvent * event);
+
+    // Key release event callback
+    void keyReleaseEvent(QKeyEvent * event);
+
+    // Mouse press event callback
+    void mousePressEvent(QMouseEvent * event);
+
+    // Mouse release event callback
+    void mouseReleaseEvent(QMouseEvent * event);
+
+    // Mouse move event callback
+    void mouseMoveEvent(QMouseEvent * event);
+
+    // Mouse wheel event callback
+    void wheelEvent(QWheelEvent * event);
+
     // Called when OpenGL rendering
     void paintGL(QOpenGLShaderProgram *program, const QMatrix4x4& matrix);
 

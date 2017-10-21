@@ -37,7 +37,8 @@ SOURCES += \
     src/geometry/shapes.cpp \
     src/gameobject/material.cpp \
     src/gameobject/rigidbody.cpp \
-    src/gameobject/camera.cpp
+    src/gameobject/camera.cpp \
+    src/controller/camera_rts.cpp
 
 HEADERS += \
 	src/mainwindow.h \
@@ -51,7 +52,8 @@ HEADERS += \
     src/geometry/shapes.h \
     src/gameobject/material.h \
     src/gameobject/rigidbody.h \
-    src/gameobject/camera.h
+    src/gameobject/camera.h \
+    src/controller/camera_rts.h
 
 FORMS += \
 	mainwindow.ui

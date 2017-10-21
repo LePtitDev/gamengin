@@ -79,6 +79,9 @@ public:
     // Set camera lookat to position
     void lookAt(QVector3D pos);
 
+    // Refresh projection
+    void refresh();
+
     // Component override
     virtual void destroy() override;
 
@@ -90,11 +93,6 @@ public:
 
     // Indicate if the componant is an instance of Camera
     static bool isInstance(Component * c);
-
-protected:
-
-    // Calculate the projection matrix
-    void calculateProjection();
 
 };
 

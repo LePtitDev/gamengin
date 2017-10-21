@@ -1,8 +1,10 @@
 #include "glwidget.h"
 #include "gameobject/geometry.h"
 #include "gameobject/rigidbody.h"
+#include "gameobject/material.h"
 #include "gameobject/camera.h"
 #include "gameobject/particle_system.h"
+#include "controller/camera_rts.h"
 #include "geometry/shapes.h"
 
 #include <iostream>
@@ -10,23 +12,33 @@
 const int GLWidget::DefaultFrameRate = 60;
 const char * GLWidget::DefaultVShader = "./shaders/vshader.glsl";
 const char * GLWidget::DefaultFShader = "./shaders/fshader.glsl";
-const char * GLWidget::DefaultTexture = "./res/default.png";
 
 GLWidget::GLWidget(QWidget *parent) :
-    QOpenGLWidget(parent)
+    QOpenGLWidget(parent),
+    camera(new GameObject()),
+    gameObject(new GameObject())
 {
     // On lance le timer d'update
     updateTimer.start(1000 / GLWidget::DefaultFrameRate, this);
 
-    camera.transform().position.setX(1.0f);
-    camera.transform().position.setY(1.0f);
-    camera.addComponent<Camera>()->lookAt(QVector3D(0.0f, 0.0f, -5.0f));
+    // Active la récupération des événements clavier
+    grabKeyboard();
+
+    camera->transform().position.setX(1.0f);
+    camera->transform().position.setY(1.0f);
+    //camera->addComponent<Camera>()->lookAt(QVector3D(0.0f, 0.0f, -5.0f));
+    camera->addComponent<Camera>();
+    camera->addComponent<CameraRTSController>();
 }
 
 GLWidget::~GLWidget() {
     // Définie le contexte courant pour détruire les textures et buffers
     makeCurrent();
-    delete texture;
+    // Detruit les objets OpenGL
+    texture.reset();
+    delete camera;
+    delete gameObject;
+    Material::defaultTexture().reset();
     doneCurrent();
 }
 
@@ -51,29 +63,43 @@ void GLWidget::initShaders() {
 }
 
 void GLWidget::initTexture() {
-    // Charge la texture par défaut
-    texture = new QOpenGLTexture(QImage(GLWidget::DefaultTexture).mirrored());
-
-    // Assigne le mode de filtrage pour la minification de la texture en "plus proche voisin"
-    texture->setMinificationFilter(QOpenGLTexture::Nearest);
-
-    // Assigne le mode de filtrage pour la magnification de la texture en "linéaire"
-    texture->setMagnificationFilter(QOpenGLTexture::Linear);
-
-    // Définie la texture comme étant répétitive
-    texture->setWrapMode(QOpenGLTexture::Repeat);
+    texture = Material::defaultTexture();
 }
 
 
 
 void GLWidget::timerEvent(QTimerEvent *e) {
-    gameObject.update();
+    camera->update();
+    gameObject->update();
 
-    camera.transform().position += QVector3D(0.01f, 0.0f, 0.0f);
-    camera.getComponent<Camera>()->lookAt(QVector3D(0.0f, 0.0f, -5.0f));
+    e;
 
     // Met à jour le rendu
     update();
+}
+
+void GLWidget::keyPressEvent(QKeyEvent * event) {
+    camera->keyPressEvent(event);
+}
+
+void GLWidget::keyReleaseEvent(QKeyEvent * event) {
+    camera->keyReleaseEvent(event);
+}
+
+void GLWidget::mousePressEvent(QMouseEvent * event) {
+    camera->mousePressEvent(event);
+}
+
+void GLWidget::mouseReleaseEvent(QMouseEvent * event) {
+    camera->mouseReleaseEvent(event);
+}
+
+void GLWidget::mouseMoveEvent(QMouseEvent * event) {
+    camera->mouseMoveEvent(event);
+}
+
+void GLWidget::wheelEvent(QWheelEvent * event) {
+    camera->wheelEvent(event);
 }
 
 void GLWidget::initializeGL() {
@@ -93,11 +119,10 @@ void GLWidget::initializeGL() {
     initTexture();
 
     GameObject * particle = new GameObject();
-    //particle->transform().position.setY(+5.0f);
-    particle->transform().position.setZ(-5.0f);
     GeometryCube(particle->addComponent<Geometry>());
     particle->addComponent<Rigidbody>();
-    ParticleSystem * ps = gameObject.addComponent<ParticleSystem>();
+    particle->addComponent<Material>();
+    ParticleSystem * ps = gameObject->addComponent<ParticleSystem>();
     ps->ParticleDelay = 500;
     Mesh tmp_m;
     tmp_m.addVertex(QVector3D(), QVector2D());
@@ -106,7 +131,7 @@ void GLWidget::initializeGL() {
 }
 
 void GLWidget::resizeGL(int w, int h) {
-    camera.getComponent<Camera>()->setAspect((float)w / (float)(h ? h : 1));
+    camera->getComponent<Camera>()->setAspect((float)w / (float)(h ? h : 1));
 }
 
 void GLWidget::paintGL() {
@@ -121,10 +146,10 @@ void GLWidget::paintGL() {
     texture->bind();
 
     // Matrice de transformation
-    QMatrix4x4 matrix(camera.getComponent<Camera>()->Projection);
+    QMatrix4x4 matrix(camera->getComponent<Camera>()->Projection);
 
     // Assigne la texture dans le fragment shader
     program.setUniformValue("texture", 0);
 
-    gameObject.paintGL(&program, matrix);
+    gameObject->paintGL(&program, matrix);
 }
