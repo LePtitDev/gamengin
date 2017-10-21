@@ -28,8 +28,8 @@ class ParticleSystem : public Component {
     // Particle timer
     QTime timer;
 
-    // Last creation time
-    int last_creation;
+    // Number of particles created
+    unsigned long createdCount;
 
     // Randomizer
     std::default_random_engine randomizer;
@@ -39,8 +39,8 @@ public:
     // Maximal particles count
     unsigned int MaxParticleCount;
 
-    // Delay between 2 particle creations (in milliseconds)
-    unsigned int ParticleDelay;
+    // Particle creation frequency
+    unsigned int ParticleFrequency;
 
     // Life particle duration (in milliseconds)
     unsigned int ParticleDuration;

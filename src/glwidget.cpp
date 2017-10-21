@@ -139,7 +139,6 @@ void GLWidget::initializeGL() {
     particle->addComponent<Rigidbody>();
     particle->addComponent<Material>();
     ParticleSystem * ps = rain->addComponent<ParticleSystem>();
-    ps->ParticleDelay = 500;
     Mesh tmp_m;
     tmp_m.addVertex(QVector3D(-1.0f, 0.0f, -1.0f), QVector2D(0.0f, 0.0f));
     tmp_m.addVertex(QVector3D( 1.0f, 0.0f, -1.0f), QVector2D(1.0f, 0.0f));

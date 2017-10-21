@@ -6,10 +6,10 @@
 ParticleSystem::ParticleSystem(GameObject * parent) :
     Component(parent),
     particleInstance(0),
-    MaxParticleCount(100),
-    ParticleDelay(0),
-    ParticleDuration(5000),
-    last_creation(0)
+    MaxParticleCount(2000),
+    ParticleFrequency(1000),
+    ParticleDuration(640),
+    createdCount(0)
 {
 
 }
@@ -27,7 +27,8 @@ void ParticleSystem::update() {
         particles.erase(particles.begin());
         ptimes.erase(ptimes.begin());
     }
-    if (last_creation + (int)ParticleDelay < time && particles.size() < MaxParticleCount) {
+    int needCreate = (int)(((unsigned long)time * (unsigned long)ParticleFrequency / (unsigned long)1000) - createdCount);
+    for (int i = 0; i < needCreate && particles.size() < MaxParticleCount; i++, createdCount++) {
         ptimes.push_back(time);
         GameObject * g = new GameObject();
         particleInstance->clone(g);
@@ -46,7 +47,6 @@ void ParticleSystem::update() {
         }
         particles.push_back(g);
         gameObject().addChild(g);
-        last_creation = time;
     }
 }
 
@@ -84,10 +84,10 @@ void ParticleSystem::clone(GameObject * c) {
         p->ptimes.push_back(ptimes[i]);
     }
     p->timer = timer;
-    p->last_creation = last_creation;
+    p->createdCount = createdCount;
     p->randomizer = randomizer;
     p->MaxParticleCount = MaxParticleCount;
-    p->ParticleDelay = ParticleDelay;
+    p->ParticleFrequency = ParticleFrequency;
     p->ParticleDuration = ParticleDuration;
 }
 
