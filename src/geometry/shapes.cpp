@@ -70,3 +70,25 @@ void GeometryPlane(Geometry * component) {
     mesh.addTriangle(1, 3, 2);
     component->setMesh(mesh);
 }
+
+void GeometryTerrain(Geometry * component, const QImage& heightmap) {
+    int width = heightmap.width(),
+        height = heightmap.height();
+    Mesh mesh;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            mesh.addVertex(QVector3D(-1.0f + ((float)i / (float)(height - 1)) * 2,
+                                     (float)(heightmap.pixel(i, j) & 0xff) / 1000.0,
+                                     -1.0f + ((float)j / (float)(width - 1)) * 2),
+                           QVector2D((float)i / (float)(height - 1), (float)(width - j - 1) / (float)(width - 1)));
+        }
+    }
+    mesh.getVertex(0);
+    for (int i = 0; i < (height - 1); i++) {
+        for (int j = 0; j < (width - 1); j++) {
+            mesh.addTriangle(i * width + j, i * width + j + 1, (i + 1) * width + j);
+            mesh.addTriangle((i + 1) * width + j, i * width + j + 1, (i + 1) * width + j + 1);
+        }
+    }
+    component->setMesh(mesh);
+}

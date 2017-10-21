@@ -16,7 +16,8 @@ const char * GLWidget::DefaultFShader = "./shaders/fshader.glsl";
 GLWidget::GLWidget(QWidget *parent) :
     QOpenGLWidget(parent),
     camera(new GameObject()),
-    gameObject(new GameObject())
+    terrain(new GameObject()),
+    rain(new GameObject())
 {
     // On lance le timer d'update
     updateTimer.start(1000 / GLWidget::DefaultFrameRate, this);
@@ -26,7 +27,6 @@ GLWidget::GLWidget(QWidget *parent) :
 
     camera->transform().position.setX(1.0f);
     camera->transform().position.setY(1.0f);
-    //camera->addComponent<Camera>()->lookAt(QVector3D(0.0f, 0.0f, -5.0f));
     camera->addComponent<Camera>();
     camera->addComponent<CameraRTSController>();
 }
@@ -36,8 +36,10 @@ GLWidget::~GLWidget() {
     makeCurrent();
     // Detruit les objets OpenGL
     texture.reset();
+    heighTexture.reset();
     delete camera;
-    delete gameObject;
+    delete terrain;
+    delete rain;
     Material::defaultTexture().reset();
     doneCurrent();
 }
@@ -64,13 +66,19 @@ void GLWidget::initShaders() {
 
 void GLWidget::initTexture() {
     texture = Material::defaultTexture();
+
+    heighTexture = std::make_shared<QOpenGLTexture>(QImage("./res/heightmap-3.png").mirrored());
+    heighTexture->setMinificationFilter(QOpenGLTexture::Nearest);
+    heighTexture->setMagnificationFilter(QOpenGLTexture::Linear);
+    heighTexture->setWrapMode(QOpenGLTexture::Repeat);
 }
 
 
 
 void GLWidget::timerEvent(QTimerEvent *e) {
     camera->update();
-    gameObject->update();
+    terrain->update();
+    rain->update();
 
     e;
 
@@ -118,13 +126,27 @@ void GLWidget::initializeGL() {
     initShaders();
     initTexture();
 
+    // TERRAIN
+    QImage heightmap("./res/heightmap-3.png");
+    GeometryTerrain(terrain->addComponent<Geometry>(), heightmap);
+    terrain->addComponent<Material>()->texture = heighTexture;
+
+    // RAIN
     GameObject * particle = new GameObject();
+    particle->transform().position.setY(2.0f);
+    particle->transform().scale = QVector3D(0.01f, 0.05f, 0.01f);
     GeometryCube(particle->addComponent<Geometry>());
     particle->addComponent<Rigidbody>();
     particle->addComponent<Material>();
-    ParticleSystem * ps = gameObject->addComponent<ParticleSystem>();
+    ParticleSystem * ps = rain->addComponent<ParticleSystem>();
     ps->ParticleDelay = 500;
     Mesh tmp_m;
+    tmp_m.addVertex(QVector3D(-1.0f, 0.0f, -1.0f), QVector2D(0.0f, 0.0f));
+    tmp_m.addVertex(QVector3D( 1.0f, 0.0f, -1.0f), QVector2D(1.0f, 0.0f));
+    tmp_m.addVertex(QVector3D(-1.0f, 0.0f,  1.0f), QVector2D(0.0f, 1.0f));
+    tmp_m.addVertex(QVector3D( 1.0f, 0.0f,  1.0f), QVector2D(1.0f, 1.0f));
+    tmp_m.addTriangle(0, 1, 2);
+    tmp_m.addTriangle(1, 3, 2);
     tmp_m.addVertex(QVector3D(), QVector2D());
     ps->setEmitter(&tmp_m);
     ps->setParticle(particle);
@@ -151,5 +173,6 @@ void GLWidget::paintGL() {
     // Assigne la texture dans le fragment shader
     program.setUniformValue("texture", 0);
 
-    gameObject->paintGL(&program, matrix);
+    rain->paintGL(&program, matrix);
+    terrain->paintGL(&program, matrix);
 }

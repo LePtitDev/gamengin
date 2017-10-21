@@ -7,7 +7,7 @@ ParticleSystem::ParticleSystem(GameObject * parent) :
     Component(parent),
     particleInstance(0),
     MaxParticleCount(100),
-    ParticleDelay(100),
+    ParticleDelay(0),
     ParticleDuration(5000),
     last_creation(0)
 {
@@ -31,12 +31,13 @@ void ParticleSystem::update() {
         ptimes.push_back(time);
         GameObject * g = new GameObject();
         particleInstance->clone(g);
+        std::uniform_real_distribution<> dis(0.0, 1.0);
         if (particleEmitter.trianglesCount() > 0) {
             unsigned int triangle = randomizer() % particleEmitter.trianglesCount();
-            float maxR = (float)(unsigned int)-1;
-            float t0 = maxR / (float)randomizer();
-            float t1 = (maxR / (float)randomizer()) * (1.0f - t0);
-            float t2 = (maxR / (float)randomizer()) * (1.0f - t0 - t1);
+            float maxR = (float)(unsigned long)0x100000000;
+            float t0 = dis(randomizer);
+            float t1 = dis(randomizer) * (1.0f - t0);
+            float t2 = 1.0f - t0 - t1;
             QVector3D pos = particleEmitter.getVertex(particleEmitter.getTriangle(triangle)[0]) * t0 + particleEmitter.getVertex(particleEmitter.getTriangle(triangle)[1]) * t1 + particleEmitter.getVertex(particleEmitter.getTriangle(triangle)[2]) * t2;
             g->transform().position += pos;
         }

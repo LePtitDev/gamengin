@@ -41,11 +41,17 @@ private:
     // Texture
     std::shared_ptr<QOpenGLTexture> texture;
 
+    // Heightmap texture
+    std::shared_ptr<QOpenGLTexture> heighTexture;
+
     // GameObject camera
     GameObject * camera;
 
-    // Current GameObject
-    GameObject * gameObject;
+    // Terrain GameObject
+    GameObject * terrain;
+
+    // Rain GameObject
+    GameObject * rain;
 
 public:
 

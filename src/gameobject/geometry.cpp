@@ -23,8 +23,8 @@ Mesh Geometry::getMesh() {
     delete[] v_buffer;
     indexBuffer.bind();
     unsigned int indexSize = indexBuffer.size();
-    unsigned int indexCount = indexSize / (3 * sizeof(GLushort));
-    GLushort * i_buffer = new GLushort[indexCount * 3];
+    unsigned int indexCount = indexSize / (3 * sizeof(GLuint));
+    GLuint * i_buffer = new GLuint[indexCount * 3];
     indexBuffer.read(0, i_buffer, indexSize);
     for (unsigned int i = 0; i < indexCount; i++)
         mesh.addTriangle(i_buffer[i * 3], i_buffer[i * 3 + 1], i_buffer[i * 3 + 2]);
@@ -41,14 +41,14 @@ void Geometry::setMesh(const Mesh& mesh) {
     vertexBuffer.bind();
     vertexBuffer.allocate((void *)v_buffer, mesh.vertexCount() * sizeof(Geometry::VertexData));
     delete[] v_buffer;
-    GLushort * i_buffer = new GLushort[mesh.trianglesCount() * 3];
+    GLuint * i_buffer = new GLuint[mesh.trianglesCount() * 3];
     for (unsigned int i = 0, sz = mesh.trianglesCount(); i < sz; i++) {
         i_buffer[i * 3] = mesh.getTriangle(i)[0];
         i_buffer[i * 3 + 1] = mesh.getTriangle(i)[1];
         i_buffer[i * 3 + 2] = mesh.getTriangle(i)[2];
     }
     indexBuffer.bind();
-    indexBuffer.allocate((void *)i_buffer, mesh.trianglesCount() * 3 * sizeof(GLushort));
+    indexBuffer.allocate((void *)i_buffer, mesh.trianglesCount() * 3 * sizeof(GLuint));
     delete[] i_buffer;
 }
 
@@ -86,5 +86,5 @@ void Geometry::draw(QOpenGLShaderProgram *program) {
     program->enableAttributeArray(texcoordLocation);
     program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(Geometry::VertexData));
 
-    glDrawElements(GL_TRIANGLES, indexBuffer.size() / sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLES, indexBuffer.size() / sizeof(GLuint), GL_UNSIGNED_INT, 0);
 }
