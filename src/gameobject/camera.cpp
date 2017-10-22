@@ -9,68 +9,46 @@ Camera::Camera(GameObject *parent) :
     fov(45.0f),
     zNear(0.1f),
     zFar(30.0f),
-    aspect(16.0f / 9.0f),
-    Perspective(perspective),
-    FOV(fov),
-    Near(zNear),
-    Far(zFar),
-    Aspect(aspect),
-    Projection(projection)
+    aspect(16.0f / 9.0f)
 {
-    projection.setToIdentity();
-    projection.perspective(fov, aspect, zNear, zFar);
     if (mainCamera == 0)
         mainCamera = this;
 }
 
-QMatrix4x4 Camera::getProjection() const {
-    return projection;
-}
-
 void Camera::toggleView() {
     perspective = !perspective;
-    refresh();
+}
+
+QMatrix4x4 Camera::getProjection() const {
+    QMatrix4x4 matrix;
+    matrix.setToIdentity();
+    if (perspective)
+        matrix.perspective(fov, aspect, zNear, zFar);
+    else
+        matrix.ortho(-2.0f * aspect, 2.0f * aspect, -2.0f, 2.0f, zNear, zFar);
+    return matrix;
+}
+
+QMatrix4x4 Camera::getView() const {
+    QMatrix4x4 matrix;
+    Transform& t = gameObject().transform();
+    matrix.setToIdentity();
+    matrix.lookAt(t.position, t.position + t.rotation * QVector3D(0.0f, 0.0f, 1.0f), t.rotation * QVector3D(0.0f, 1.0f, 0.0f));
+    return matrix;
 }
 
 void Camera::toggleView(bool p) {
     perspective = p;
-    refresh();
-}
-
-void Camera::setFOV(float f) {
-    fov = f;
-    refresh();
-}
-
-void Camera::setNear(float n) {
-    zNear = n;
-    refresh();
-}
-
-void Camera::setFar(float f) {
-    zFar = f;
-    refresh();
-}
-
-void Camera::setAspect(float a) {
-    aspect = a;
-    refresh();
 }
 
 void Camera::lookAt(QVector3D pos) {
     Transform& t = gameObject().transform();
     t.rotation = QQuaternion::fromDirection(pos - t.position, QVector3D(0.0f, 1.0f, 0.0f));
-    refresh();
 }
 
-void Camera::refresh() {
-    projection.setToIdentity();
-    if (perspective)
-        projection.perspective(fov, aspect, zNear, zFar);
-    else
-        projection.ortho(-2.0f * aspect, 2.0f * aspect, -2.0f, 2.0f, zNear, zFar);
-    Transform& t = gameObject().transform();
-    projection.lookAt(t.position, t.position + t.rotation * QVector3D(0.0f, 0.0f, 1.0f), t.rotation * QVector3D(0.0f, 1.0f, 0.0f));
+void Camera::apply(QOpenGLShaderProgram * program) {
+    program->setUniformValue("m_projection", getProjection());
+    program->setUniformValue("m_view", getView());
 }
 
 void Camera::destroy() {
@@ -89,7 +67,6 @@ void Camera::clone(GameObject *c) {
     cam->zNear = zNear;
     cam->zFar = zFar;
     cam->aspect = aspect;
-    cam->projection = projection;
 }
 
 bool Camera::isInstance(Component *c) {

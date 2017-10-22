@@ -180,23 +180,24 @@ void GameObject::wheelEvent(QWheelEvent * event) {
         children[i]->wheelEvent(event);
 }
 
-void GameObject::paintGL(QOpenGLShaderProgram *program, const QMatrix4x4& matrix) {
+void GameObject::paintGL(QOpenGLShaderProgram *program) {
     Geometry * geometry = getComponent<Geometry>();
     if (geometry != 0) {
         Material * mat = getComponent<Material>();
         if (mat != 0)
             mat->paintGL(program);
         Transform * transform = getComponent<Transform>();
-        QMatrix4x4 projection(matrix);
-        projection.translate(transform->position);
-        projection.rotate(transform->rotation);
-        projection.scale(transform->scale);
-        program->setUniformValue("m_projection", projection);
+        QMatrix4x4 matrix;
+        matrix.setToIdentity();
+        matrix.translate(transform->position);
+        matrix.rotate(transform->rotation);
+        matrix.scale(transform->scale);
+        program->setUniformValue("m_model", matrix);
 
         geometry->draw(program);
     }
     for (size_t i = 0, sz = children.size(); i < sz; i++)
-        children[i]->paintGL(program, matrix);
+        children[i]->paintGL(program);
 }
 
 void GameObject::removeChild(GameObject * g) {

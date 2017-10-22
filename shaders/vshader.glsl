@@ -9,6 +9,12 @@ precision mediump float;
 // Matrice de projection
 uniform mat4 m_projection;
 
+// Matrice de caméra
+uniform mat4 m_view;
+
+// Matrice de l'objet
+uniform mat4 m_model;
+
 // Coordonnées du sommet
 attribute vec4 a_position;
 
@@ -21,7 +27,7 @@ varying vec2 v_texcoord;
 // Fonction d'entrée
 void main() {
 	// Calcule la position du sommet projeté
-    gl_Position = m_projection * a_position;
+    gl_Position = m_projection * m_view * m_model * a_position;
 
 	// Transmet les coordonnées de texture au fragment shader
 	// La valeur est automatiquement interpolée aux fragments sur la face du polygone

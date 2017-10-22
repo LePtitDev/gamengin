@@ -152,7 +152,7 @@ void GLWidget::initializeGL() {
 }
 
 void GLWidget::resizeGL(int w, int h) {
-    camera->getComponent<Camera>()->setAspect((float)w / (float)(h ? h : 1));
+    camera->getComponent<Camera>()->aspect = (float)w / (float)(h ? h : 1);
 }
 
 void GLWidget::paintGL() {
@@ -166,12 +166,12 @@ void GLWidget::paintGL() {
     // Attache la texture pour être utilisée
     texture->bind();
 
-    // Matrice de transformation
-    QMatrix4x4 matrix(camera->getComponent<Camera>()->Projection);
+    // Assign projection and view matrix
+    camera->getComponent<Camera>()->apply(&program);
 
     // Assigne la texture dans le fragment shader
     program.setUniformValue("texture", 0);
 
-    rain->paintGL(&program, matrix);
-    terrain->paintGL(&program, matrix);
+    rain->paintGL(&program);
+    terrain->paintGL(&program);
 }

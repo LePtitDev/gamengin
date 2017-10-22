@@ -4,6 +4,7 @@
 #include "component.h"
 
 #include <QMatrix4x4>
+#include <QOpenGLShaderProgram>
 
 class Camera : public Component {
 
@@ -11,8 +12,6 @@ public:
 
     // MainCamera instance
     static Camera * mainCamera;
-
-private:
 
     // Indicate if projection mode is perspective or orthographic
     bool perspective;
@@ -29,58 +28,26 @@ private:
     // Aspect ratio
     float aspect;
 
-    // Projection matrix
-    QMatrix4x4 projection;
-
-public:
-
-    // Public accessor to perspective
-    const bool& Perspective;
-
-    // Public accessor to fov
-    const float& FOV;
-
-    // Public accessor to near
-    const float& Near;
-
-    // Public accessor to far
-    const float& Far;
-
-    // Public accessor to aspect
-    const float& Aspect;
-
-    // Public accessor to projection
-    const QMatrix4x4& Projection;
-
     // Basic constructor
     Camera(GameObject * parent);
-
-    // Get current projection
-    QMatrix4x4 getProjection() const;
 
     // Toggle to perspective or orthographic
     void toggleView();
 
+    // Get projection matrix
+    QMatrix4x4 getProjection() const;
+
+    // Get view matrix
+    QMatrix4x4 getView() const;
+
     // Toggle to perspective or orthographic
     void toggleView(bool p);
-
-    // Set the camera aspect
-    void setFOV(float f);
-
-    // Set the camera aspect
-    void setNear(float n);
-
-    // Set the camera aspect
-    void setFar(float f);
-
-    // Set the camera aspect
-    void setAspect(float a);
 
     // Set camera lookat to position
     void lookAt(QVector3D pos);
 
-    // Refresh projection
-    void refresh();
+    // Assign projection and view matrix
+    void apply(QOpenGLShaderProgram * program);
 
     // Component override
     virtual void destroy() override;

@@ -133,7 +133,7 @@ public:
     void wheelEvent(QWheelEvent * event);
 
     // Called when OpenGL rendering
-    void paintGL(QOpenGLShaderProgram *program, const QMatrix4x4& matrix);
+    void paintGL(QOpenGLShaderProgram *program);
 
 private:
     

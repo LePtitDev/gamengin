@@ -1,6 +1,5 @@
 #include "camera_rts.h"
 #include "../gameobject/gameobject.h"
-#include "../gameobject/camera.h"
 
 #include <QtMath>
 
@@ -64,7 +63,6 @@ void CameraRTSController::update() {
     timer.restart();
     wheelDelta = 0;
     mouseMove = QPoint();
-    gameObject().getComponent<Camera>()->refresh();
 }
 
 void CameraRTSController::keyPressEvent(QKeyEvent * event) {
