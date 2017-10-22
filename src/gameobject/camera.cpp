@@ -49,6 +49,7 @@ void Camera::lookAt(QVector3D pos) {
 void Camera::apply(QOpenGLShaderProgram * program) {
     program->setUniformValue("m_projection", getProjection());
     program->setUniformValue("m_view", getView());
+    program->setUniformValue("v_camerapos", gameObject().transform().position);
 }
 
 void Camera::destroy() {

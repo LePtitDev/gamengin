@@ -15,6 +15,7 @@ public:
     // Elements of vertex buffer
     struct VertexData {
         QVector3D position;
+        QVector3D normal;
         QVector2D texCoord;
     };
 

@@ -7,7 +7,7 @@ CameraRTSController::CameraRTSController(GameObject *parent) :
     Component(parent),
     wheelDelta(0),
     distance(10.0f),
-    translationSpeed(0.2f),
+    translationSpeed(0.05f),
     rotationSpeed(15.0f),
     zoomSpeed(0.1f),
     maxZoom(2.0f),

@@ -33,9 +33,18 @@ Mesh Geometry::getMesh() {
 }
 
 void Geometry::setMesh(const Mesh& mesh) {
+    QVector3D * normals = new QVector3D[mesh.vertexCount()];
+    for (unsigned int i = 0, sz = mesh.trianglesCount(); i < sz; i++) {
+        std::array<unsigned int, 3> t = mesh.getTriangle(i);
+        QVector3D tmp = QVector3D::crossProduct(mesh.getVertex(t[1]) - mesh.getVertex(t[0]), mesh.getVertex(t[2]) - mesh.getVertex(t[0]));
+        normals[t[0]] += tmp;
+        normals[t[1]] += tmp;
+        normals[t[2]] += tmp;
+    }
     Geometry::VertexData * v_buffer = new Geometry::VertexData[mesh.vertexCount()];
     for (unsigned int i = 0, sz = mesh.vertexCount(); i < sz; i++) {
         v_buffer[i].position = mesh.getVertex(i);
+        v_buffer[i].normal = normals[i].normalized();
         v_buffer[i].texCoord = mesh.getUV(i);
     }
     vertexBuffer.bind();
@@ -80,6 +89,11 @@ void Geometry::draw(QOpenGLShaderProgram *program) {
     int vertexLocation = program->attributeLocation("a_position");
     program->enableAttributeArray(vertexLocation);
     program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, sizeof(Geometry::VertexData));
+
+    offset += sizeof(QVector3D);
+    int normalLocation = program->attributeLocation("a_normal");
+    program->enableAttributeArray(normalLocation);
+    program->setAttributeBuffer(normalLocation, GL_FLOAT, offset, 3, sizeof(Geometry::VertexData));
 
     offset += sizeof(QVector3D);
     int texcoordLocation = program->attributeLocation("a_texcoord");

@@ -18,6 +18,15 @@ uniform mat4 m_model;
 // Coordonnées du sommet
 attribute vec4 a_position;
 
+// Coordonnées du fragment
+varying vec3 v_position;
+
+// Vecteur normal du sommet
+attribute vec4 a_normal;
+
+// Vecteur normal du sommet
+varying vec3 v_normal;
+
 // Coordonnées sur la texture (en entrée)
 attribute vec2 a_texcoord;
 
@@ -28,6 +37,12 @@ varying vec2 v_texcoord;
 void main() {
 	// Calcule la position du sommet projeté
     gl_Position = m_projection * m_view * m_model * a_position;
+	
+	// Calcule le vecteur normal du sommet
+	v_position = a_position.xyz;
+	
+	// Calcule le vecteur normal du sommet
+	v_normal = a_normal.xyz;
 
 	// Transmet les coordonnées de texture au fragment shader
 	// La valeur est automatiquement interpolée aux fragments sur la face du polygone
