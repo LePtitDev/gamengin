@@ -112,7 +112,21 @@ int CameraRTSController::component() const {
 
 void CameraRTSController::clone(GameObject *c) {
     CameraRTSController * cam = c->addComponent<CameraRTSController>();
-
+    cam->timer = timer;
+    cam->keyPressed = keyPressed;
+    cam->mousePressed = mousePressed;
+    cam->lastPos = lastPos;
+    cam->mouseMove = mouseMove;
+    cam->wheelDelta = wheelDelta;
+    cam->center = center;
+    cam->distance = distance;
+    cam->translationSpeed = translationSpeed;
+    cam->rotationSpeed = rotationSpeed;
+    cam->zoomSpeed = zoomSpeed;
+    cam->maxZoom = maxZoom;
+    cam->minZoom = minZoom;
+    cam->rotation = rotation;
+    cam->zoom = zoom;
 }
 
 bool CameraRTSController::isInstance(Component *c) {
