@@ -44,6 +44,9 @@ private:
     // Heightmap texture
     std::shared_ptr<QOpenGLTexture> heighTexture;
 
+    // Snow texture
+    std::shared_ptr<QOpenGLTexture> snowTexture;
+
     // GameObject camera
     GameObject * camera;
 

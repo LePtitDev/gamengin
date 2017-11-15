@@ -5,6 +5,7 @@
 #include "gameobject/camera.h"
 #include "gameobject/particle_system.h"
 #include "controller/camera_rts.h"
+#include "controller/camera_facing.h"
 #include "geometry/shapes.h"
 
 #include <iostream>
@@ -37,6 +38,7 @@ GLWidget::~GLWidget() {
     // Detruit les objets OpenGL
     texture.reset();
     heighTexture.reset();
+    snowTexture.reset();
     delete camera;
     delete terrain;
     delete rain;
@@ -71,6 +73,11 @@ void GLWidget::initTexture() {
     heighTexture->setMinificationFilter(QOpenGLTexture::Nearest);
     heighTexture->setMagnificationFilter(QOpenGLTexture::Linear);
     heighTexture->setWrapMode(QOpenGLTexture::Repeat);
+    snowTexture = std::make_shared<QOpenGLTexture>(QImage("./res/flocon.png").mirrored());
+    snowTexture->setMinificationFilter(QOpenGLTexture::Nearest);
+    snowTexture->setMagnificationFilter(QOpenGLTexture::Linear);
+    snowTexture->setWrapMode(QOpenGLTexture::Repeat);
+
 }
 
 
@@ -134,10 +141,14 @@ void GLWidget::initializeGL() {
     // RAIN
     GameObject * particle = new GameObject();
     particle->transform().position.setY(2.0f);
-    particle->transform().scale = QVector3D(0.01f, 0.05f, 0.01f);
-    GeometryCube(particle->addComponent<Geometry>());
+    //particle->transform().scale = QVector3D(0.01f, 0.01f, 1.0f);
+    particle->transform().scale = QVector3D(0.05f, 0.05f, 1.0f);
+    GeometryUIPlane(particle->addComponent<Geometry>());
     particle->addComponent<Rigidbody>();
+    particle->getComponent<Rigidbody>()->gravity.setY(-0.05f);
     particle->addComponent<Material>();
+    particle->getComponent<Material>()->texture = snowTexture;
+    particle->addComponent<CameraFacingController>();
     ParticleSystem * ps = rain->addComponent<ParticleSystem>();
     Mesh tmp_m;
     tmp_m.addVertex(QVector3D(-1.0f, 0.0f, -1.0f), QVector2D(0.0f, 0.0f));
@@ -149,6 +160,8 @@ void GLWidget::initializeGL() {
     tmp_m.addVertex(QVector3D(), QVector2D());
     ps->setEmitter(&tmp_m);
     ps->setParticle(particle);
+    ps->ParticleDuration = 2800;
+    ps->ParticleFrequency = 20;
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -158,6 +171,8 @@ void GLWidget::resizeGL(int w, int h) {
 void GLWidget::paintGL() {
     // Réinitialise les buffer de couleur et de profondeur
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Attache le pipeline pour être utilisé
     if (!program.bind())
@@ -176,6 +191,6 @@ void GLWidget::paintGL() {
     program.setUniformValue("v_lightpos", QVector3D(0.0f, 2.0f, -1.0f));
     program.setUniformValue("v_lightcolor", QVector3D(1.0f, 1.0f, 1.0f));
 
-    rain->paintGL(&program);
     terrain->paintGL(&program);
+    rain->paintGL(&program);
 }

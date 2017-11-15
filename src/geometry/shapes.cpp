@@ -66,8 +66,19 @@ void GeometryPlane(Geometry * component) {
     mesh.addVertex(QVector3D( 1.0f, 0.0f, -1.0f), QVector2D(1.0f, 0.0f));
     mesh.addVertex(QVector3D(-1.0f, 0.0f,  1.0f), QVector2D(0.0f, 1.0f));
     mesh.addVertex(QVector3D( 1.0f, 0.0f,  1.0f), QVector2D(1.0f, 1.0f));
-    mesh.addTriangle(0, 1, 2);
-    mesh.addTriangle(1, 3, 2);
+    mesh.addTriangle(0, 2, 1);
+    mesh.addTriangle(1, 2, 3);
+    component->setMesh(mesh);
+}
+
+void GeometryUIPlane(Geometry * component) {
+    Mesh mesh;
+    mesh.addVertex(QVector3D(-1.0f, -1.0f, 0.0f), QVector2D(1.0f, 0.0f));
+    mesh.addVertex(QVector3D( 1.0f, -1.0f, 0.0f), QVector2D(0.0f, 0.0f));
+    mesh.addVertex(QVector3D(-1.0f, 1.0f,  0.0f), QVector2D(1.0f, 1.0f));
+    mesh.addVertex(QVector3D( 1.0f, 1.0f,  0.0f), QVector2D(0.0f, 1.0f));
+    mesh.addTriangle(0, 2, 1);
+    mesh.addTriangle(1, 2, 3);
     component->setMesh(mesh);
 }
 
