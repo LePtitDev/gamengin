@@ -24,16 +24,8 @@ void Rigidbody::destroy() {
     delete this;
 }
 
-int Rigidbody::component() const {
-    return COMPONENT_RIGIDBODY_ID;
-}
-
 void Rigidbody::clone(GameObject *c) {
     Rigidbody * r = c->addComponent<Rigidbody>();
     r->gravity = gravity;
     r->velocity = velocity;
-}
-
-bool Rigidbody::isInstance(Component *c) {
-    return (c->component() == COMPONENT_RIGIDBODY_ID);
 }

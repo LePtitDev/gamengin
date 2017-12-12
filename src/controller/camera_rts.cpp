@@ -106,10 +106,6 @@ void CameraRTSController::destroy() {
     delete this;
 }
 
-int CameraRTSController::component() const {
-    return COMPONENT_CONTROLLER_CAMERA_RTS_ID;
-}
-
 void CameraRTSController::clone(GameObject *c) {
     CameraRTSController * cam = c->addComponent<CameraRTSController>();
     cam->timer = timer;
@@ -127,8 +123,4 @@ void CameraRTSController::clone(GameObject *c) {
     cam->minZoom = minZoom;
     cam->rotation = rotation;
     cam->zoom = zoom;
-}
-
-bool CameraRTSController::isInstance(Component *c) {
-    return (c->component() == COMPONENT_CONTROLLER_CAMERA_RTS_ID);
 }

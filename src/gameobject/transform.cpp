@@ -13,17 +13,9 @@ void Transform::destroy() {
     delete this;
 }
 
-int Transform::component() const {
-    return COMPONENT_TRANSFORM_ID;
-}
-
 void Transform::clone(GameObject * c) {
     Transform * t = c->addComponent<Transform>();
     t->position = position;
     t->rotation = rotation;
     t->scale = scale;
-}
-
-bool Transform::isInstance(Component * c) {
-    return (c->component() == COMPONENT_TRANSFORM_ID);
 }

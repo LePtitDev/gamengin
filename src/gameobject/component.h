@@ -31,6 +31,9 @@ public:
     // Basic constructor
     Component(GameObject * parent);
 
+    // Destructor
+    virtual ~Component() {}
+
     // Public accessor of the GameObject
     GameObject& gameObject() const;
 
@@ -57,9 +60,6 @@ public:
 
     // Destroy the component
     virtual void destroy() = 0;
-
-    // Return the component ID
-    virtual int component() const = 0;
 
     // Clone the component in an other GameObject
     virtual void clone(GameObject * c) = 0;

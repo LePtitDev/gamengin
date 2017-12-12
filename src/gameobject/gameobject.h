@@ -52,8 +52,8 @@ public:
     template <typename T>
     T * getComponent() {
         for (size_t i = 0, sz = components.size(); i < sz; i++) {
-            if (T::isInstance(components[i]))
-                return (T *)components[i];
+            T * tmp = dynamic_cast<T *>(components[i]);
+            if (tmp) return tmp;
         }
         return 0;
     }
@@ -62,8 +62,8 @@ public:
     template <typename T>
     const T * getComponent() const {
         for (size_t i = 0, sz = components.size(); i < sz; i++) {
-            if (T::isInstance(components[i]))
-                return (T *)components[i];
+            const T * tmp = dynamic_cast<const T *>(components[i]);
+            if (tmp) return tmp;
         }
         return 0;
     }
@@ -73,8 +73,8 @@ public:
     std::vector<T *> getComponents() {
         std::vector<T *> res;
         for (size_t i = 0, sz = components.size(); i < sz; i++) {
-            if (T::isInstance(components[i]))
-                res.push_back((T *)components[i]);
+            T * tmp = dynamic_cast<T *>(components[i]);
+            res.push_back(tmp);
         }
         return res;
     }
@@ -84,8 +84,8 @@ public:
     const std::vector<T *> getComponents() const {
         std::vector<T *> res;
         for (size_t i = 0, sz = components.size(); i < sz; i++) {
-            if (T::isInstance(components[i]))
-                res.push_back((T *)components[i]);
+            const T * tmp = dynamic_cast<const T *>(components[i]);
+            res.push_back(tmp);
         }
         return res;
     }

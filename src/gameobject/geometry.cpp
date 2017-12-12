@@ -68,17 +68,9 @@ void Geometry::destroy() {
     delete this;
 }
 
-int Geometry::component() const {
-    return COMPONENT_GEOMETRY_ID;
-}
-
 void Geometry::clone(GameObject * c) {
     Geometry * g = c->addComponent<Geometry>();
     g->setMesh(getMesh());
-}
-
-bool Geometry::isInstance(Component *c) {
-    return (c->component() == COMPONENT_GEOMETRY_ID);
 }
 
 void Geometry::draw(QOpenGLShaderProgram *program) {

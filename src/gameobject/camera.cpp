@@ -57,10 +57,6 @@ void Camera::destroy() {
     delete this;
 }
 
-int Camera::component() const {
-    return COMPONENT_CAMERA_ID;
-}
-
 void Camera::clone(GameObject *c) {
     Camera * cam = c->addComponent<Camera>();
     cam->perspective = perspective;
@@ -68,8 +64,4 @@ void Camera::clone(GameObject *c) {
     cam->zNear = zNear;
     cam->zFar = zFar;
     cam->aspect = aspect;
-}
-
-bool Camera::isInstance(Component *c) {
-    return (c->component() == COMPONENT_CAMERA_ID);
 }

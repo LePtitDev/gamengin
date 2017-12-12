@@ -12,10 +12,6 @@ void Material::destroy() {
     delete this;
 }
 
-int Material::component() const {
-    return COMPONENT_MATERIAL_ID;
-}
-
 void Material::clone(GameObject *c) {
     Material * mat = c->addComponent<Material>();
     if (texture)
@@ -30,10 +26,6 @@ void Material::paintGL(QOpenGLShaderProgram *program) {
 
     // Assigne la texture dans le fragment shader
     program->setUniformValue("texture", 0);
-}
-
-bool Material::isInstance(Component *c) {
-    return (c->component() == COMPONENT_MATERIAL_ID);
 }
 
 std::shared_ptr<QOpenGLTexture>& Material::defaultTexture() {

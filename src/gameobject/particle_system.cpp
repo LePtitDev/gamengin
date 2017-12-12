@@ -35,7 +35,6 @@ void ParticleSystem::update() {
         std::uniform_real_distribution<> dis(0.0, 1.0);
         if (particleEmitter.trianglesCount() > 0) {
             unsigned int triangle = randomizer() % particleEmitter.trianglesCount();
-            float maxR = (float)(unsigned long)0x100000000;
             float t0 = dis(randomizer);
             float t1 = dis(randomizer) * (1.0f - t0);
             float t2 = 1.0f - t0 - t1;
@@ -69,10 +68,6 @@ void ParticleSystem::destroy() {
     delete this;
 }
 
-int ParticleSystem::component() const {
-    return COMPONENT_PARTICLE_SYSTEM_ID;
-}
-
 void ParticleSystem::clone(GameObject * c) {
     ParticleSystem * p = c->addComponent<ParticleSystem>();
     p->particleEmitter = particleEmitter;
@@ -89,8 +84,4 @@ void ParticleSystem::clone(GameObject * c) {
     p->MaxParticleCount = MaxParticleCount;
     p->ParticleFrequency = ParticleFrequency;
     p->ParticleDuration = ParticleDuration;
-}
-
-bool ParticleSystem::isInstance(Component * c) {
-    return (c->component() == COMPONENT_PARTICLE_SYSTEM_ID);
 }

@@ -10,12 +10,5 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    LuaScript scr;
-    scr.load("a = 'un test'");
-    scr.execute();
-    std::string s;
-    qInfo() << scr.getVariable("a", s);
-    qInfo() << s.c_str();
-
     return a.exec();
 }
