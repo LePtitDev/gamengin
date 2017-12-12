@@ -36,9 +36,7 @@ GLWidget::~GLWidget() {
     // Définie le contexte courant pour détruire les textures et buffers
     makeCurrent();
     // Detruit les objets OpenGL
-    texture.reset();
-    heighTexture.reset();
-    snowTexture.reset();
+    Asset::Clear();
     delete camera;
     delete terrain;
     delete rain;
@@ -67,17 +65,8 @@ void GLWidget::initShaders() {
 }
 
 void GLWidget::initTexture() {
-    texture = Material::defaultTexture();
-
-    heighTexture = std::make_shared<QOpenGLTexture>(QImage("./res/heightmap-3.png").mirrored());
-    heighTexture->setMinificationFilter(QOpenGLTexture::Nearest);
-    heighTexture->setMagnificationFilter(QOpenGLTexture::Linear);
-    heighTexture->setWrapMode(QOpenGLTexture::Repeat);
-    snowTexture = std::make_shared<QOpenGLTexture>(QImage("./res/flocon.png").mirrored());
-    snowTexture->setMinificationFilter(QOpenGLTexture::Nearest);
-    snowTexture->setMagnificationFilter(QOpenGLTexture::Linear);
-    snowTexture->setWrapMode(QOpenGLTexture::Repeat);
-
+    Asset::LoadPNG("heighTexture", "./res/heightmap-3.png");
+    Asset::LoadPNG("snowTexture", "./res/flocon.png");
 }
 
 
@@ -136,7 +125,7 @@ void GLWidget::initializeGL() {
     // TERRAIN
     QImage heightmap("./res/heightmap-3.png");
     GeometryTerrain(terrain->addComponent<Geometry>(), heightmap);
-    terrain->addComponent<Material>()->texture = heighTexture;
+    terrain->addComponent<Material>()->assignTexture("heighTexture");
 
     // RAIN
     GameObject * particle = new GameObject();
@@ -147,7 +136,7 @@ void GLWidget::initializeGL() {
     particle->addComponent<Rigidbody>();
     particle->getComponent<Rigidbody>()->gravity.setY(-0.05f);
     particle->addComponent<Material>();
-    particle->getComponent<Material>()->texture = snowTexture;
+    particle->getComponent<Material>()->assignTexture("snowTexture");
     particle->addComponent<CameraFacingController>();
     ParticleSystem * ps = rain->addComponent<ParticleSystem>();
     Mesh tmp_m;
@@ -177,9 +166,6 @@ void GLWidget::paintGL() {
     // Attache le pipeline pour être utilisé
     if (!program.bind())
         close();
-
-    // Attache la texture pour être utilisée
-    texture->bind();
 
     // Assign projection and view matrix
     camera->getComponent<Camera>()->apply(&program);

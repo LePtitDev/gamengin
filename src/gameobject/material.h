@@ -2,6 +2,7 @@
 #define MATERIAL_H
 
 #include "component.h"
+#include "../assets/assets.h"
 
 #include <memory>
 
@@ -10,13 +11,16 @@
 
 class Material : public Component {
 
-public:
+    // Asset
+    Asset * texture;
 
-    // Material texture
-    std::shared_ptr<QOpenGLTexture> texture;
+public:
 
     // Basic constructor
     Material(GameObject * parent);
+
+    // Assign the texture
+    bool assignTexture(const char * name);
 
     // Component override
     virtual void destroy() override;

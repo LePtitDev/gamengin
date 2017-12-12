@@ -11,12 +11,12 @@ class Asset {
     std::string name;
 
     // Asset content
-    std::shared_ptr<void> data;
+    void * data;
 
 public:
 
     // Basic constructor
-    Asset(const char * name, const std::shared_ptr<void>& data) : name(name), data(data) {}
+    Asset(const char * name, void * data) : name(name), data(data) {}
 
     // Get asset name
     const char * getName() {
@@ -26,13 +26,13 @@ public:
     // Get content data
     template <typename T>
     T * getData() {
-        return dynamic_cast<T *>(data.get());
+        return (T *)data;
     }
 
     // Get content data
     template <typename T>
     const T * getData() const {
-        return dynamic_cast<const T *>(data.get());
+        return (const T *)data;
     }
 
 private:

@@ -2,9 +2,17 @@
 #include "gameobject.h"
 
 Material::Material(GameObject *parent) :
-    Component(parent)
+    Component(parent), texture(0)
 {
 
+}
+
+bool Material::assignTexture(const char *name) {
+    Asset * asset = Asset::Find(name);
+    if (asset == 0)
+        return false;
+    texture = asset;
+    return true;
 }
 
 void Material::destroy() {
@@ -14,13 +22,13 @@ void Material::destroy() {
 
 void Material::clone(GameObject *c) {
     Material * mat = c->addComponent<Material>();
-    if (texture)
+    if (texture != 0)
         mat->texture = texture;
 }
 
 void Material::paintGL(QOpenGLShaderProgram *program) {
-    if (texture)
-        texture->bind();
+    if (texture != 0)
+        texture->getData<QOpenGLTexture>()->bind();
     else
         defaultTexture()->bind();
 

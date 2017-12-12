@@ -38,15 +38,6 @@ private:
     // Shader
     QOpenGLShaderProgram program;
 
-    // Texture
-    std::shared_ptr<QOpenGLTexture> texture;
-
-    // Heightmap texture
-    std::shared_ptr<QOpenGLTexture> heighTexture;
-
-    // Snow texture
-    std::shared_ptr<QOpenGLTexture> snowTexture;
-
     // GameObject camera
     GameObject * camera;
 

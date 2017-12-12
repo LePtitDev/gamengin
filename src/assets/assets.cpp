@@ -26,7 +26,9 @@ Asset * Asset::LoadPNG(const char * name, const char *filename)  {
     texture->setMinificationFilter(QOpenGLTexture::Nearest);
     texture->setMagnificationFilter(QOpenGLTexture::Linear);
     texture->setWrapMode(QOpenGLTexture::Repeat);
-    return new Asset(name, std::shared_ptr<void>((void *)texture));
+    Asset * asset = new Asset(name, (void *)texture);
+    Asset::GetAssetList().push_back(asset);
+    return asset;
 }
 
 Asset * Asset::LoadPLY(const char *name, const char *filename) {
@@ -86,5 +88,7 @@ Asset * Asset::LoadPLY(const char *name, const char *filename) {
             mesh->addTriangle(f[0], f[k - 1], f[k], false);
     }
     stream.close();
-    return new Asset(name, std::shared_ptr<void>((void *)mesh));;
+    Asset * asset = new Asset(name, (void *)mesh);
+    Asset::GetAssetList().push_back(asset);
+    return asset;
 }
