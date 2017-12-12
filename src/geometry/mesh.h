@@ -10,7 +10,7 @@
 class Mesh {
 
     // Vertex list
-    std::vector<QVector3D> V;
+    std::vector<QVector3D> V, N;
 
     // UV coordinates list
     std::vector<QVector2D> UV;
@@ -32,13 +32,19 @@ public:
 
     // Add a new triangle
     // Return the triangle ID
-    unsigned int addTriangle(unsigned int a, unsigned int b, unsigned int c);
+    unsigned int addTriangle(unsigned int a, unsigned int b, unsigned int c, bool addnormal = true);
 
     // Get a vertex
     QVector3D& getVertex(unsigned int i);
 
     // Get a vertex
     const QVector3D& getVertex(unsigned int i) const;
+
+    // Get a normal
+    QVector3D& getNormal(unsigned int i);
+
+    // Get a normal
+    const QVector3D& getNormal(unsigned int i) const;
 
     // Get a vertex UV coordinates
     QVector2D& getUV(unsigned int i);

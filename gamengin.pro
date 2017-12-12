@@ -75,7 +75,8 @@ SOURCES += \
     include/lua/ltablib.c \
     include/lua/lutf8lib.c \
     include/lua/loadlib.c \
-    include/lua/linit.c
+    include/lua/linit.c \
+    src/assets/assets.cpp
 
 
 HEADERS += \
@@ -120,7 +121,8 @@ HEADERS += \
     include/lua/lualib.h \
     include/lua/lundump.h \
     include/lua/lvm.h \
-    include/lua/lzio.h
+    include/lua/lzio.h \
+    src/assets/assets.h
 
 FORMS += \
 	mainwindow.ui
