@@ -122,21 +122,23 @@ void GLWidget::initializeGL() {
     initShaders();
     initTexture();
 
+    GeometryCube("geometry:cube");
+    GeometryPlane("geometry:plane");
+    GeometryUIPlane("geometry:ui-plane");
+
     // TERRAIN
     QImage heightmap("./res/heightmap-3.png");
-    GeometryTerrain(terrain->addComponent<Geometry>(), heightmap);
+    GeometryTerrain("geometry:heightmap", heightmap);
+    terrain->addComponent<Geometry>()->assignMesh("geometry:heightmap");
     terrain->addComponent<Material>()->assignTexture("heighTexture");
 
     // RAIN
     GameObject * particle = new GameObject();
     particle->transform().position.setY(2.0f);
-    //particle->transform().scale = QVector3D(0.01f, 0.01f, 1.0f);
     particle->transform().scale = QVector3D(0.05f, 0.05f, 1.0f);
-    GeometryUIPlane(particle->addComponent<Geometry>());
-    particle->addComponent<Rigidbody>();
-    particle->getComponent<Rigidbody>()->gravity.setY(-0.05f);
-    particle->addComponent<Material>();
-    particle->getComponent<Material>()->assignTexture("snowTexture");
+    particle->addComponent<Geometry>()->assignMesh("geometry:ui-plane");
+    particle->addComponent<Rigidbody>()->gravity.setY(-0.05f);
+    particle->addComponent<Material>()->assignTexture("snowTexture");
     particle->addComponent<CameraFacingController>();
     ParticleSystem * ps = rain->addComponent<ParticleSystem>();
     Mesh tmp_m;

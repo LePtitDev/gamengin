@@ -3,40 +3,22 @@
 
 #include "component.h"
 #include "../geometry/mesh.h"
+#include "../assets/assets.h"
 
-#include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
-#include <QOpenGLFunctions>
 
-class Geometry : public Component, protected QOpenGLFunctions {
+class Geometry : public Component {
 
-public:
-
-    // Elements of vertex buffer
-    struct VertexData {
-        QVector3D position;
-        QVector3D normal;
-        QVector2D texCoord;
-    };
-
-protected:
-
-    // Vertex buffer
-    QOpenGLBuffer vertexBuffer;
-
-    // Triangle index buffer
-    QOpenGLBuffer indexBuffer;
+    // Mesh asset
+    Asset * mesh;
 
 public:
 
     // Basic constructor
     Geometry(GameObject * parent);
 
-    // Get the geometry mesh
-    Mesh getMesh();
-
-    // Set the geometry mesh
-    void setMesh(const Mesh& mesh);
+    // Assign mesh
+    bool assignMesh(const char * name);
 
     // Component override
     virtual void destroy() override;

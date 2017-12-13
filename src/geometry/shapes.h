@@ -5,16 +5,16 @@
 
 #include <QImage>
 
-// Create a cube in the geometry mesh
-void GeometryCube(Geometry * component);
+// Create a cube mesh
+void GeometryCube(const char * name);
 
-// Create a plane in the geometry mesh
-void GeometryPlane(Geometry * component);
+// Create a plane mesh
+void GeometryPlane(const char * name);
 
-// Create a plane in the geometry mesh
-void GeometryUIPlane(Geometry * component);
+// Create a plane mesh
+void GeometryUIPlane(const char * name);
 
-// Create a terrain by a heightmap in the geometry mesh
-void GeometryTerrain(Geometry * component, const QImage& heightmap);
+// Create a terrain mesh by a heightmap
+void GeometryTerrain(const char * name, const QImage& heightmap);
 
 #endif // SHAPES_H

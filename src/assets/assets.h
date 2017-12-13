@@ -88,6 +88,11 @@ public:
         GetAssetList().clear();
     }
 
+    // Add an asset
+    static void Add(Asset * asset) {
+        GetAssetList().push_back(asset);
+    }
+
     // Load a new asset
     static Asset * Load(const char * name, const char * filename);
 

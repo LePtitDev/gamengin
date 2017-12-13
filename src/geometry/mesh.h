@@ -6,8 +6,28 @@
 
 #include <QVector2D>
 #include <QVector3D>
+#include <QOpenGLBuffer>
+#include <QOpenGLFunctions>
+#include <QOpenGLShaderProgram>
 
-class Mesh {
+class Mesh : protected QOpenGLFunctions {
+
+public:
+
+    // Elements of vertex buffer
+    struct VertexData {
+        QVector3D position;
+        QVector3D normal;
+        QVector2D texCoord;
+    };
+
+private:
+
+    // Vertex buffer
+    QOpenGLBuffer vertexBuffer;
+
+    // Triangle index buffer
+    QOpenGLBuffer indexBuffer;
 
     // Vertex list
     std::vector<QVector3D> V, N;
@@ -19,6 +39,12 @@ class Mesh {
     std::vector<std::array<unsigned int, 3>> T;
 
 public:
+
+    // Basic constructor
+    Mesh();
+
+    // Destructor
+    ~Mesh();
 
     // Get vertex count
     unsigned int vertexCount() const;
@@ -58,8 +84,13 @@ public:
     // Get a triangle indexs
     const std::array<unsigned int, 3>& getTriangle(unsigned int i) const;
 
+    // Refresh buffers
+    void refreshBuffers();
+
     // Assign operator
     Mesh& operator=(const Mesh& m);
+
+    void draw(QOpenGLShaderProgram *program);
 
 };
 
