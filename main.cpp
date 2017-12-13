@@ -1,4 +1,4 @@
-#include "src/mainwindow.h"
+#include "src/glwidget.h"
 #include "src/gameobject/gameobject.h"
 #include "src/script/lua.h"
 
@@ -7,7 +7,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    GLWidget w;
     w.show();
 
     return a.exec();

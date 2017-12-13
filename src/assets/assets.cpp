@@ -88,6 +88,7 @@ Asset * Asset::LoadPLY(const char *name, const char *filename) {
             mesh->addTriangle(f[0], f[k - 1], f[k], false);
     }
     stream.close();
+    mesh->refreshBuffers();
     Asset * asset = new Asset(name, (void *)mesh);
     Asset::GetAssetList().push_back(asset);
     return asset;

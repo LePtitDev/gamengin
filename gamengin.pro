@@ -26,7 +26,6 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    src/mainwindow.cpp \
     src/glwidget.cpp \
     src/gameobject/gameobject.cpp \
     src/gameobject/component.cpp \
@@ -80,7 +79,6 @@ SOURCES += \
 
 
 HEADERS += \
-    src/mainwindow.h \
     src/glwidget.h \
     src/gameobject/gameobject.h \
     src/gameobject/transform.h \
