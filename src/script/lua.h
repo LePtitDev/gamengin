@@ -15,7 +15,19 @@ public:
         STRING,
         TABLE,
         FUNCTION,
+        POINTER,
         UNKNOW
+    };
+
+    // Lua variable
+    struct Variable {
+        VariableType type;
+        union {
+            bool v_boolean;
+            float v_number;
+            void * v_pointer;
+        };
+        std::string v_string;
     };
 
 private:
@@ -47,23 +59,32 @@ public:
     // Return error message
     const char * getError();
 
-    // Get a variable type
-    VariableType getType(const char * name);
+    // Get a global variable
+    Variable getVariable(const char *name);
 
-    // Get a boolean global variable
-    bool getVariable(const char * name, bool& value);
+    // Get a global variable
+    Variable getVariable(int luaID);
 
-    // Get an integer global variable
-    bool getVariable(const char * name, int& value);
+    // Push a variable
+    void pushVariable(const Variable& var);
 
-    // Get a floatting global variable
-    bool getVariable(const char * name, float& value);
-
-    // Get a string global variable
-    bool getVariable(const char * name, std::string& value);
+    // Create a variable in lua state
+    void createVariable(const char * name, const Variable& var);
 
     // Create a function in lua state
     void createFunction(const char * name, int (*value)(void * state));
+
+    // Call a LUA function
+    Variable callFunction(const char * name, Variable * args, int count);
+
+    // Load main game script lib
+    void loadLibGame();
+
+    // Load scene script lib
+    void loadLibScene();
+
+    // Load script lib
+    void loadLibScript();
 
 };
 

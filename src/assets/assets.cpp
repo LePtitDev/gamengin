@@ -1,9 +1,12 @@
 #include "assets.h"
+#include "scene.h"
 #include "../geometry/mesh.h"
 
 #include <cstring>
 #include <fstream>
 #include <QOpenGLTexture>
+
+Scene * Scene::main;
 
 Asset * Asset::Load(const char * name, const char * filename) {
     int len = (int)std::strlen(filename);
@@ -15,6 +18,8 @@ Asset * Asset::Load(const char * name, const char * filename) {
         return LoadPNG(name, filename);
     if (std::strcmp(filename + pos, "ply") == 0)
         return LoadPLY(name, filename);
+    if (std::strcmp(filename + pos, "lua") == 0)
+        return LoadLUA(name, filename);
     return 0;
 }
 
@@ -90,6 +95,19 @@ Asset * Asset::LoadPLY(const char *name, const char *filename) {
     stream.close();
     mesh->refreshBuffers();
     Asset * asset = new Asset(name, (void *)mesh);
+    Asset::GetAssetList().push_back(asset);
+    return asset;
+}
+
+Asset * Asset::LoadLUA(const char * name, const char *filename)  {
+    std::ifstream file(filename);
+    if (!file.is_open())
+        return 0;
+    std::string * str = new std::string();
+    while (!file.eof())
+        *str += (char)file.get();
+    file.close();
+    Asset * asset = new Asset(name, (void *)str);
     Asset::GetAssetList().push_back(asset);
     return asset;
 }

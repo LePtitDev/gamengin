@@ -75,7 +75,10 @@ SOURCES += \
     include/lua/lutf8lib.c \
     include/lua/loadlib.c \
     include/lua/linit.c \
-    src/assets/assets.cpp
+    src/assets/assets.cpp \
+    src/script/gamelib.cpp \
+    src/script/scenelib.cpp \
+    src/script/scriptlib.cpp
 
 
 HEADERS += \
@@ -120,7 +123,9 @@ HEADERS += \
     include/lua/lundump.h \
     include/lua/lvm.h \
     include/lua/lzio.h \
-    src/assets/assets.h
+    src/assets/assets.h \
+    src/assets/scene.h \
+    src/assets/game.h
 
 FORMS += \
 	mainwindow.ui

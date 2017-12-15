@@ -26,85 +26,92 @@ const char * LuaScript::getError() {
     return lua_tostring((lua_State *)state, -1);
 }
 
-LuaScript::VariableType LuaScript::getType(const char *name) {
+LuaScript::Variable LuaScript::getVariable(const char *name) {
     lua_settop((lua_State *)state, 0);
     lua_getglobal((lua_State *)state, name);
-    VariableType type;
-    switch (lua_type((lua_State *)state, 1)) {
+    Variable var = getVariable(1);
+    lua_pop((lua_State *)state, 1);
+    return var;
+}
+
+LuaScript::Variable LuaScript::getVariable(int luaID) {
+    Variable var;
+    switch (lua_type((lua_State *)state, luaID)) {
     case LUA_TNIL:
-        type = NIL;
+        var.type = NIL;
         break;
     case LUA_TBOOLEAN:
-        type = BOOLEAN;
+        var.type = BOOLEAN;
+        var.v_boolean = (bool)(lua_toboolean((lua_State *)state, luaID) != 0);
         break;
     case LUA_TNUMBER:
-        type = NUMBER;
+        var.type = NUMBER;
+        var.v_number = (float)lua_tonumber((lua_State *)state, luaID);
         break;
     case LUA_TSTRING:
-        type = STRING;
+        var.type = STRING;
+        var.v_string = lua_tostring((lua_State *)state, luaID);
         break;
     case LUA_TTABLE:
-        type = TABLE;
+        var.type = TABLE;
         break;
     case LUA_TFUNCTION:
-        type = FUNCTION;
+        var.type = FUNCTION;
+        var.v_pointer = (void *)lua_tocfunction((lua_State *)state, luaID);
+        break;
+    case LUA_TLIGHTUSERDATA:
+        var.type = POINTER;
+        var.v_pointer = (void *)lua_topointer((lua_State *)state, luaID);
         break;
     default:
-        type = UNKNOW;
+        var.type = UNKNOW;
     }
-    lua_pop((lua_State *)state,1);
-    return type;
+    return var;
 }
 
-bool LuaScript::getVariable(const char *name, bool &value) {
-    lua_settop((lua_State *)state, 0);
-    lua_getglobal((lua_State *)state, name);
-    bool success = false;
-    if (lua_isboolean((lua_State *)state, 1)) {
-        success = true;
-        value = (bool)(lua_toboolean((lua_State *)state, 1) != 0);
+void LuaScript::pushVariable(const Variable &var) {
+    switch (var.type) {
+    case NIL:
+        lua_pushnil((lua_State *)state);
+        break;
+    case BOOLEAN:
+        lua_pushboolean((lua_State *)state, var.v_boolean ? 1 : 0);
+        break;
+    case NUMBER:
+        lua_pushnumber((lua_State *)state, var.v_number);
+        break;
+    case STRING:
+        lua_pushstring((lua_State *)state, var.v_string.c_str());
+        break;
+    case POINTER:
+        lua_pushlightuserdata((lua_State *)state, var.v_pointer);
+        break;
+    default:
+        lua_pushnil((lua_State *)state);
     }
-    lua_pop((lua_State *)state,1);
-    return success;
 }
 
-bool LuaScript::getVariable(const char *name, int &value) {
-    lua_settop((lua_State *)state, 0);
-    lua_getglobal((lua_State *)state, name);
-    bool success = false;
-    if (lua_isinteger((lua_State *)state, 1)) {
-        success = true;
-        value = (int)lua_tointeger((lua_State *)state, 1);
-    }
-    lua_pop((lua_State *)state,1);
-    return success;
-}
-
-bool LuaScript::getVariable(const char *name, float &value) {
-    lua_settop((lua_State *)state, 0);
-    lua_getglobal((lua_State *)state, name);
-    bool success = false;
-    if (lua_isnumber((lua_State *)state, 1)) {
-        success = true;
-        value = (float)lua_tonumber((lua_State *)state, 1);
-    }
-    lua_pop((lua_State *)state,1);
-    return success;
-}
-
-bool LuaScript::getVariable(const char *name, std::string &value) {
-    lua_settop((lua_State *)state, 0);
-    lua_getglobal((lua_State *)state, name);
-    bool success = false;
-    if (lua_isstring((lua_State *)state, 1)) {
-        success = true;
-        value.clear();
-        value = lua_tostring((lua_State *)state, 1);
-    }
-    lua_pop((lua_State *)state,1);
-    return success;
+void LuaScript::createVariable(const char *name, const Variable &var) {
+    pushVariable(var);
+    lua_setglobal((lua_State *)state, name);
 }
 
 void LuaScript::createFunction(const char *name, int (*value)(void *)) {
     lua_register((lua_State *)state, name, (int(*)(lua_State *))value);
+}
+
+LuaScript::Variable LuaScript::callFunction(const char *name, Variable *args, int count) {
+    Variable result;
+    lua_getglobal((lua_State *)state, name);
+    if (!lua_isfunction((lua_State *)state, -1)) {
+        lua_pop((lua_State *)state, 1);
+        result.type = VariableType::UNKNOW;
+        return result;
+    }
+    else {
+        for (int i = 0; i < count; i++)
+            pushVariable(args[i]);
+        lua_call((lua_State *)state, count, 1);
+        return getVariable(-1);
+    }
 }

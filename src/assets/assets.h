@@ -102,6 +102,9 @@ public:
     // Load a 3D model
     static Asset * LoadPLY(const char * name, const char * filename);
 
+    // Load a LUA script
+    static Asset * LoadLUA(const char * name, const char * filename);
+
 };
 
 #endif // ASSETS_H
