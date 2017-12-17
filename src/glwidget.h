@@ -44,9 +44,6 @@ private:
     // GameObject camera
     GameObject * camera;
 
-    // Terrain GameObject
-    GameObject * terrain;
-
     // Rain GameObject
     GameObject * rain;
 

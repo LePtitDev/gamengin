@@ -11,8 +11,13 @@ Camera::Camera(GameObject *parent) :
     zFar(30.0f),
     aspect(16.0f / 9.0f)
 {
-    if (mainCamera == 0)
-        mainCamera = this;
+    if (mainCamera != 0) {
+        fov = mainCamera->fov;
+        zNear = mainCamera->zNear;
+        zFar = mainCamera->zFar;
+        aspect = mainCamera->aspect;
+    }
+    mainCamera = this;
 }
 
 void Camera::toggleView() {

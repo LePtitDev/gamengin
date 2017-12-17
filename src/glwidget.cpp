@@ -20,8 +20,6 @@ const char * GLWidget::DefaultGameScript = "./assets/game.lua";
 
 GLWidget::GLWidget(QWidget *parent) :
     QOpenGLWidget(parent),
-    camera(new GameObject()),
-    terrain(new GameObject()),
     rain(new GameObject())
 {
     // On lance le timer d'update
@@ -29,11 +27,6 @@ GLWidget::GLWidget(QWidget *parent) :
 
     // Active la récupération des événements clavier
     grabKeyboard();
-
-    camera->transform().position.setX(1.0f);
-    camera->transform().position.setY(1.0f);
-    camera->addComponent<Camera>();
-    camera->addComponent<CameraRTSController>();
 }
 
 GLWidget::~GLWidget() {
@@ -41,8 +34,7 @@ GLWidget::~GLWidget() {
     makeCurrent();
     // Detruit les objets OpenGL
     Asset::Clear();
-    delete camera;
-    delete terrain;
+    Scene::ClearScenes();
     delete rain;
     Material::defaultTexture().reset();
     doneCurrent();
@@ -81,46 +73,40 @@ void GLWidget::initGame() {
         qInfo() << "Aucune scene n'a été définie";
         exit(0);
     }
-
-    Asset::LoadPNG("heighTexture", "./res/heightmap-3.png");
-    Asset::LoadPNG("snowTexture", "./res/flocon.png");
 }
 
 
 
-void GLWidget::timerEvent(QTimerEvent *e) {
-    camera->update();
-    terrain->update();
+void GLWidget::timerEvent(QTimerEvent *) {
+    Scene::main->update();
     rain->update();
-
-    e;
 
     // Met à jour le rendu
     update();
 }
 
 void GLWidget::keyPressEvent(QKeyEvent * event) {
-    camera->keyPressEvent(event);
+    Scene::main->keyPressEvent(event);
 }
 
 void GLWidget::keyReleaseEvent(QKeyEvent * event) {
-    camera->keyReleaseEvent(event);
+    Scene::main->keyReleaseEvent(event);
 }
 
 void GLWidget::mousePressEvent(QMouseEvent * event) {
-    camera->mousePressEvent(event);
+    Scene::main->mousePressEvent(event);
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent * event) {
-    camera->mouseReleaseEvent(event);
+    Scene::main->mouseReleaseEvent(event);
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent * event) {
-    camera->mouseMoveEvent(event);
+    Scene::main->mouseMoveEvent(event);
 }
 
 void GLWidget::wheelEvent(QWheelEvent * event) {
-    camera->wheelEvent(event);
+    Scene::main->wheelEvent(event);
 }
 
 void GLWidget::initializeGL() {
@@ -139,23 +125,13 @@ void GLWidget::initializeGL() {
     initShaders();
     initGame();
 
-    GeometryCube("geometry:cube");
-    GeometryPlane("geometry:plane");
-    GeometryUIPlane("geometry:ui-plane");
-
-    // TERRAIN
-    QImage heightmap("./res/heightmap-3.png");
-    GeometryTerrain("geometry:heightmap", heightmap);
-    terrain->addComponent<Geometry>()->assignMesh("geometry:heightmap");
-    terrain->addComponent<Material>()->assignTexture("heighTexture");
-
     // RAIN
     GameObject * particle = new GameObject();
     particle->transform().position.setY(2.0f);
     particle->transform().scale = QVector3D(0.05f, 0.05f, 1.0f);
     particle->addComponent<Geometry>()->assignMesh("geometry:ui-plane");
     particle->addComponent<Rigidbody>()->gravity.setY(-0.05f);
-    particle->addComponent<Material>()->assignTexture("snowTexture");
+    particle->addComponent<Material>()->assignTexture("texture:snow");
     particle->addComponent<CameraFacingController>();
     ParticleSystem * ps = rain->addComponent<ParticleSystem>();
     Mesh tmp_m;
@@ -173,7 +149,7 @@ void GLWidget::initializeGL() {
 }
 
 void GLWidget::resizeGL(int w, int h) {
-    camera->getComponent<Camera>()->aspect = (float)w / (float)(h ? h : 1);
+    Camera::mainCamera->aspect = (float)w / (float)(h ? h : 1);
 }
 
 void GLWidget::paintGL() {
@@ -187,7 +163,7 @@ void GLWidget::paintGL() {
         close();
 
     // Assign projection and view matrix
-    camera->getComponent<Camera>()->apply(&program);
+    Camera::mainCamera->apply(&program);
 
     // Assigne la texture dans le fragment shader
     program.setUniformValue("texture", 0);
@@ -196,6 +172,6 @@ void GLWidget::paintGL() {
     program.setUniformValue("v_lightpos", QVector3D(0.0f, 2.0f, -1.0f));
     program.setUniformValue("v_lightcolor", QVector3D(1.0f, 1.0f, 1.0f));
 
-    terrain->paintGL(&program);
+    Scene::main->paintGL(&program);
     rain->paintGL(&program);
 }
