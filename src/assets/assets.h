@@ -18,6 +18,9 @@ public:
     // Basic constructor
     Asset(const char * name, void * data) : name(name), data(data) {}
 
+    // Destructor
+    ~Asset() { if (data != 0) delete data; }
+
     // Get asset name
     const char * getName() {
         return name.c_str();

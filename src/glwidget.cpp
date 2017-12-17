@@ -7,12 +7,16 @@
 #include "controller/camera_rts.h"
 #include "controller/camera_facing.h"
 #include "geometry/shapes.h"
+#include "script/lua.h"
+#include "assets/game.h"
+#include "assets/scene.h"
 
 #include <iostream>
 
 const int GLWidget::DefaultFrameRate = 60;
 const char * GLWidget::DefaultVShader = "./shaders/vshader.glsl";
 const char * GLWidget::DefaultFShader = "./shaders/fshader.glsl";
+const char * GLWidget::DefaultGameScript = "./assets/game.lua";
 
 GLWidget::GLWidget(QWidget *parent) :
     QOpenGLWidget(parent),
@@ -64,7 +68,20 @@ void GLWidget::initShaders() {
         close();
 }
 
-void GLWidget::initTexture() {
+void GLWidget::initGame() {
+    LuaScript gameScript;
+    Asset * asset = Asset::Load("script:main", DefaultGameScript);
+    gameScript.loadLibGame();
+    if (asset == 0 || !gameScript.load(asset->getData<std::string>()->c_str())) {
+        qInfo() << "Le script principal n'a pas pu être chargé";
+        exit(0);
+    }
+    gameScript.execute();
+    if (SceneManager::GetScenes().size() == 0) {
+        qInfo() << "Aucune scene n'a été définie";
+        exit(0);
+    }
+
     Asset::LoadPNG("heighTexture", "./res/heightmap-3.png");
     Asset::LoadPNG("snowTexture", "./res/flocon.png");
 }
@@ -120,7 +137,7 @@ void GLWidget::initializeGL() {
     glEnable(GL_CULL_FACE);
 
     initShaders();
-    initTexture();
+    initGame();
 
     GeometryCube("geometry:cube");
     GeometryPlane("geometry:plane");

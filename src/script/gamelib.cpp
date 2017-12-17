@@ -5,11 +5,18 @@
 
 namespace LuaLib {
 
+/// Register a new scene for the game
+///
+/// Parameters :
+/// - asset name
+/// - scene path
+///
+/// Return scene manager pointer if success and nil otherwise
 int CreateScene(void * state) {
     lua_State * L = (lua_State *)state;
     int argc = lua_gettop(L);
     if (argc < 2) {
-        lua_pushlightuserdata(L, (void *)0);
+        lua_pushnil(L);
         return 1;
     }
     SceneManager * scene = new SceneManager(lua_tostring(L, 1), lua_tostring(L, 2));
@@ -18,6 +25,12 @@ int CreateScene(void * state) {
     return 1;
 }
 
+/// Set the default scene to load
+///
+/// Parameter :
+/// - scene name / scene manager pointer
+///
+/// Return true if success and false otherwise
 int SetDefaultScene(void * state) {
     lua_State * L = (lua_State *)state;
     int argc = lua_gettop(L);

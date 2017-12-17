@@ -31,8 +31,8 @@ public:
             return;
         Scene::main = this;
         LuaScript script;
-        script.load(asset->getData<std::string>()->c_str());
         script.loadLibScene();
+        script.load(asset->getData<std::string>()->c_str());
         script.execute();
     }
 

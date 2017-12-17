@@ -30,6 +30,9 @@ public:
     // Fragment shader par défaut
     static const char * DefaultFShader;
 
+    // Script d'initialisation du jeu
+    static const char * DefaultGameScript;
+
 private:
 
     // Timer d'update
@@ -60,8 +63,8 @@ private:
     // Initialise les shaders
     void initShaders();
 
-    // Initialise la texture par défaut
-    void initTexture();
+    // Initialise les scenes et assets du jeu
+    void initGame();
 
 protected:
 

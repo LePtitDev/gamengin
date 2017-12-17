@@ -104,8 +104,9 @@ Asset * Asset::LoadLUA(const char * name, const char *filename)  {
     if (!file.is_open())
         return 0;
     std::string * str = new std::string();
-    while (!file.eof())
-        *str += (char)file.get();
+    char c;
+    while (!file.eof() && (c = (char)file.get()) != -1)
+        *str += c;
     file.close();
     Asset * asset = new Asset(name, (void *)str);
     Asset::GetAssetList().push_back(asset);
