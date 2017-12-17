@@ -41,12 +41,6 @@ private:
     // Shader
     QOpenGLShaderProgram program;
 
-    // GameObject camera
-    GameObject * camera;
-
-    // Rain GameObject
-    GameObject * rain;
-
 public:
 
     // Constructeur par défaut

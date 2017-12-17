@@ -53,7 +53,7 @@ int GameObject_AddComponent(void * state) {
         result = (void *)gm->addComponent<Material>();
     else if (comp == "Camera")
         result = (void *)gm->addComponent<Camera>();
-    else if (comp == "RTSCameraController")
+    else if (comp == "CameraRTSController")
         result = (void *)gm->addComponent<CameraRTSController>();
     else if (comp == "CameraFacingController")
         result = (void *)gm->addComponent<CameraFacingController>();
@@ -405,6 +405,190 @@ int Material_Assign(void * state) {
     return 1;
 }
 
+///////////////////////
+////// RIGIDBODY //////
+///////////////////////
+
+/// Get rigidbody gravity
+///
+/// Parameters :
+/// - rigidbody pointer
+///
+/// Return x, y, z if success and nil otherwise
+int Rigidbody_GetGravity(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushnil(L);
+        return 1;
+    }
+    Rigidbody * rb = (Rigidbody *)lua_topointer(L, 1);
+    if (rb == 0)
+        lua_pushnil(L);
+    lua_pushnumber(L, rb->gravity.x());
+    lua_pushnumber(L, rb->gravity.y());
+    lua_pushnumber(L, rb->gravity.z());
+    return 3;
+}
+
+/// Set rigidbody gravity
+///
+/// Parameters :
+/// - rigidbody pointer
+/// - x coordinate
+/// - y coordinate
+/// - z coordinate
+///
+/// Return true if success and false otherwise
+int Rigidbody_SetGravity(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 4) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    Rigidbody * rb = (Rigidbody *)lua_topointer(L, 1);
+    if (rb == 0)
+        lua_pushboolean(L, 0);
+    rb->gravity.setX(lua_tonumber(L, 2));
+    rb->gravity.setY(lua_tonumber(L, 3));
+    rb->gravity.setZ(lua_tonumber(L, 4));
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
+/////////////////////////////
+////// PARTICLE SYSTEM //////
+/////////////////////////////
+
+/// Assign particule emitter
+///
+/// Parameters :
+/// - material pointer
+/// - mesh asset name
+///
+/// Return true if success and false otherwise
+int ParticleSystem_AssignEmitter(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    ParticleSystem * ps = (ParticleSystem *)lua_topointer(L, 1);
+    if (ps == 0 || !ps->assignEmitter(lua_tostring(L, 2)))
+        lua_pushboolean(L, 0);
+    else
+        lua_pushboolean(L, 1);
+    return 1;
+}
+
+/// Assign particule prefab
+///
+/// Parameters :
+/// - material pointer
+/// - prefab asset name
+///
+/// Return true if success and false otherwise
+int ParticleSystem_AssignParticule(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    ParticleSystem * ps = (ParticleSystem *)lua_topointer(L, 1);
+    if (ps == 0 || !ps->assignParticle(lua_tostring(L, 2)))
+        lua_pushboolean(L, 0);
+    else
+        lua_pushboolean(L, 1);
+    return 1;
+}
+
+/// Get particule duration
+///
+/// Parameters :
+/// - particule system pointer
+///
+/// Return duration if success and nil otherwise
+int ParticleSystem_GetParticuleDuration(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushnil(L);
+        return 1;
+    }
+    ParticleSystem * ps = (ParticleSystem *)lua_topointer(L, 1);
+    if (ps == 0)
+        lua_pushnil(L);
+    lua_pushnumber(L, ps->ParticleDuration);
+    return 1;
+}
+
+/// Get particule frequency
+///
+/// Parameters :
+/// - particule system pointer
+///
+/// Return frequency if success and nil otherwise
+int ParticleSystem_GetParticuleFrequency(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushnil(L);
+        return 1;
+    }
+    ParticleSystem * ps = (ParticleSystem *)lua_topointer(L, 1);
+    if (ps == 0)
+        lua_pushnil(L);
+    lua_pushnumber(L, ps->ParticleFrequency);
+    return 1;
+}
+
+/// Set particule duration
+///
+/// Parameters :
+/// - particule system pointer
+/// - duration
+///
+/// Return true if success and false otherwise
+int ParticleSystem_SetParticuleDuration(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    ParticleSystem * ps = (ParticleSystem *)lua_topointer(L, 1);
+    if (ps == 0)
+        lua_pushboolean(L, 0);
+    ps->ParticleDuration = lua_tonumber(L, 2);
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
+/// Set particule frequency
+///
+/// Parameters :
+/// - particule system pointer
+/// - frequency
+///
+/// Return true if success and false otherwise
+int ParticleSystem_SetParticuleFrequency(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    ParticleSystem * ps = (ParticleSystem *)lua_topointer(L, 1);
+    if (ps == 0)
+        lua_pushboolean(L, 0);
+    ps->ParticleFrequency = lua_tonumber(L, 2);
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
 }
 
 void LuaScript::loadLibScript() {
@@ -451,4 +635,32 @@ void LuaScript::loadLibScript() {
     lua_pushcfunction(L, (lua_CFunction)LuaLib::Material_Assign);
     lua_setfield(L, id, "Assign");
     lua_setglobal(L, "Material");
+
+    /// RIGIDBODY ///
+
+    lua_createtable(L, 0, 0);
+    id = lua_gettop(L);
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Rigidbody_GetGravity);
+    lua_setfield(L, id, "GetGravity");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Rigidbody_SetGravity);
+    lua_setfield(L, id, "SetGravity");
+    lua_setglobal(L, "Rigidbody");
+
+    /// PARTICULE SYSTEM ///
+
+    lua_createtable(L, 0, 0);
+    id = lua_gettop(L);
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::ParticleSystem_AssignEmitter);
+    lua_setfield(L, id, "AssignEmitter");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::ParticleSystem_AssignParticule);
+    lua_setfield(L, id, "AssignParticle");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::ParticleSystem_GetParticuleDuration);
+    lua_setfield(L, id, "GetParticleDuration");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::ParticleSystem_GetParticuleFrequency);
+    lua_setfield(L, id, "GetParticleFrequency");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::ParticleSystem_SetParticuleDuration);
+    lua_setfield(L, id, "SetParticleDuration");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::ParticleSystem_SetParticuleFrequency);
+    lua_setfield(L, id, "SetParticleFrequency");
+    lua_setglobal(L, "ParticleSystem");
 }

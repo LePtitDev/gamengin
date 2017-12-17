@@ -19,8 +19,7 @@ const char * GLWidget::DefaultFShader = "./shaders/fshader.glsl";
 const char * GLWidget::DefaultGameScript = "./assets/game.lua";
 
 GLWidget::GLWidget(QWidget *parent) :
-    QOpenGLWidget(parent),
-    rain(new GameObject())
+    QOpenGLWidget(parent)
 {
     // On lance le timer d'update
     updateTimer.start(1000 / GLWidget::DefaultFrameRate, this);
@@ -35,7 +34,6 @@ GLWidget::~GLWidget() {
     // Detruit les objets OpenGL
     Asset::Clear();
     Scene::ClearScenes();
-    delete rain;
     Material::defaultTexture().reset();
     doneCurrent();
 }
@@ -79,7 +77,6 @@ void GLWidget::initGame() {
 
 void GLWidget::timerEvent(QTimerEvent *) {
     Scene::main->update();
-    rain->update();
 
     // Met à jour le rendu
     update();
@@ -124,28 +121,6 @@ void GLWidget::initializeGL() {
 
     initShaders();
     initGame();
-
-    // RAIN
-    GameObject * particle = new GameObject();
-    particle->transform().position.setY(2.0f);
-    particle->transform().scale = QVector3D(0.05f, 0.05f, 1.0f);
-    particle->addComponent<Geometry>()->assignMesh("geometry:ui-plane");
-    particle->addComponent<Rigidbody>()->gravity.setY(-0.05f);
-    particle->addComponent<Material>()->assignTexture("texture:snow");
-    particle->addComponent<CameraFacingController>();
-    ParticleSystem * ps = rain->addComponent<ParticleSystem>();
-    Mesh tmp_m;
-    tmp_m.addVertex(QVector3D(-1.0f, 0.0f, -1.0f), QVector2D(0.0f, 0.0f));
-    tmp_m.addVertex(QVector3D( 1.0f, 0.0f, -1.0f), QVector2D(1.0f, 0.0f));
-    tmp_m.addVertex(QVector3D(-1.0f, 0.0f,  1.0f), QVector2D(0.0f, 1.0f));
-    tmp_m.addVertex(QVector3D( 1.0f, 0.0f,  1.0f), QVector2D(1.0f, 1.0f));
-    tmp_m.addTriangle(0, 1, 2);
-    tmp_m.addTriangle(1, 3, 2);
-    tmp_m.addVertex(QVector3D(), QVector2D());
-    ps->setEmitter(&tmp_m);
-    ps->setParticle(particle);
-    ps->ParticleDuration = 2800;
-    ps->ParticleFrequency = 20;
 }
 
 void GLWidget::resizeGL(int w, int h) {
@@ -173,5 +148,4 @@ void GLWidget::paintGL() {
     program.setUniformValue("v_lightcolor", QVector3D(1.0f, 1.0f, 1.0f));
 
     Scene::main->paintGL(&program);
-    rain->paintGL(&program);
 }

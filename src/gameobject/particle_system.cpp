@@ -1,5 +1,6 @@
 #include "particle_system.h"
 #include "gameobject.h"
+#include "../assets/assets.h"
 
 #include <QVector3D>
 
@@ -9,6 +10,7 @@ ParticleSystem::ParticleSystem(GameObject * parent) :
     MaxParticleCount(2000),
     ParticleFrequency(1000),
     ParticleDuration(640),
+    particleEmitter(0),
     createdCount(0)
 {
 
@@ -19,7 +21,7 @@ void ParticleSystem::update() {
         timer.start();
         return;
     }
-    if (particleInstance == 0 || particleEmitter.vertexCount() == 0)
+    if (particleInstance == 0 || particleEmitter == 0 || particleEmitter->vertexCount() == 0)
         return;
     int time = timer.msecsTo(timer.currentTime());
     while (ptimes.size() > 0 && ptimes[0] + (int)ParticleDuration < time) {
@@ -33,30 +35,38 @@ void ParticleSystem::update() {
         GameObject * g = new GameObject();
         particleInstance->clone(g);
         std::uniform_real_distribution<> dis(0.0, 1.0);
-        if (particleEmitter.trianglesCount() > 0) {
-            unsigned int triangle = randomizer() % particleEmitter.trianglesCount();
+        if (particleEmitter->trianglesCount() > 0) {
+            unsigned int triangle = randomizer() % particleEmitter->trianglesCount();
             float t0 = dis(randomizer);
             float t1 = dis(randomizer) * (1.0f - t0);
             float t2 = 1.0f - t0 - t1;
-            QVector3D pos = particleEmitter.getVertex(particleEmitter.getTriangle(triangle)[0]) * t0 + particleEmitter.getVertex(particleEmitter.getTriangle(triangle)[1]) * t1 + particleEmitter.getVertex(particleEmitter.getTriangle(triangle)[2]) * t2;
+            QVector3D pos = particleEmitter->getVertex(particleEmitter->getTriangle(triangle)[0]) * t0 + particleEmitter->getVertex(particleEmitter->getTriangle(triangle)[1]) * t1 + particleEmitter->getVertex(particleEmitter->getTriangle(triangle)[2]) * t2;
             g->transform().position += pos;
         }
         else {
-            g->transform().position += particleEmitter.getVertex(randomizer() % particleEmitter.vertexCount());
+            g->transform().position += particleEmitter->getVertex(randomizer() % particleEmitter->vertexCount());
         }
         particles.push_back(g);
         gameObject().addChild(g);
     }
 }
 
-void ParticleSystem::setEmitter(Mesh * m) {
-    particleEmitter = *m;
+bool ParticleSystem::assignEmitter(const char * name) {
+    particleEmitter = 0;
+    Asset * asset = Asset::Find(name);
+    if (asset == 0 || asset->getData<Mesh>() == 0)
+        return false;
+    particleEmitter = asset->getData<Mesh>();
+    return true;
 }
 
-void ParticleSystem::setParticle(GameObject * g) {
-    if (particleInstance != 0)
-        particleInstance->destroy();
-    particleInstance = g;
+bool ParticleSystem::assignParticle(const char * name) {
+    particleInstance = 0;
+    Asset * asset = Asset::Find(name);
+    if (asset == 0 || asset->getData<GameObject>() == 0)
+        return false;
+    particleInstance = asset->getData<GameObject>();
+    return true;
 }
 
 void ParticleSystem::destroy() {

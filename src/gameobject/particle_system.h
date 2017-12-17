@@ -14,7 +14,7 @@ class GameObject;
 class ParticleSystem : public Component {
 
     // Particle emitter
-    Mesh particleEmitter;
+    Mesh * particleEmitter;
 
     // Particle instance
     GameObject * particleInstance;
@@ -52,10 +52,10 @@ public:
     virtual void update() override;
     
     // Assign the particle emitter
-    void setEmitter(Mesh * mesh);
+    bool assignEmitter(const char * name);
 
     // Assign the particle instance
-    void setParticle(GameObject * g);
+    bool assignParticle(const char * name);
 
     // Component override
     virtual void destroy() override;
