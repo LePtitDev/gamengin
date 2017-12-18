@@ -168,7 +168,12 @@ int GameObject_GetComponent(void * state) {
     else if (comp == "Script")
         result = (void *)gm->getComponent<ScriptComponent>();
     else {
-        
+        for (auto scpt : gm->getComponents<ScriptComponent>()) {
+            if (scpt->getScriptName() == comp) {
+                result = (void *)scpt;
+                break;
+            }
+        }
     }
     if (result == 0)
         lua_pushnil(L);
@@ -699,6 +704,58 @@ int ParticleSystem_SetParticuleFrequency(void * state) {
     return 1;
 }
 
+////////////////////
+////// SCRIPT //////
+////////////////////
+
+/// Get script variable
+///
+/// Parameters :
+/// - script pointer
+/// - variable name
+///
+/// Return variable if success and nil otherwise
+int Script_GetVariable(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushnil(L);
+        return 1;
+    }
+    ScriptComponent * scpt = (ScriptComponent *)lua_topointer(L, 1);
+    if (scpt == 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+    LuaScript lscpt_dest(state);
+    scpt->script.pushVariable(lscpt_src.getVariable(lua_tostring(L, 2)));
+    return 1;
+}
+
+/// Get script variable
+///
+/// Parameters :
+/// - script pointer
+/// - function name
+///
+/// Return function return if success and nil otherwise
+int Script_CallFunction(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushnil(L);
+        return 1;
+    }
+    ScriptComponent * scpt = (ScriptComponent *)lua_topointer(L, 1);
+    if (scpt == 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+    LuaScript lscpt_src(state);
+    scpt->script.pushVariable(lscpt_src.getVariable(lua_tostring(L, 2)));
+    return 1;
+}
+
 }
 
 void LuaScript::loadLibScript() {
@@ -780,4 +837,12 @@ void LuaScript::loadLibScript() {
     lua_pushcfunction(L, (lua_CFunction)LuaLib::ParticleSystem_SetParticuleFrequency);
     lua_setfield(L, id, "SetParticleFrequency");
     lua_setglobal(L, "ParticleSystem");
+
+    /// SCRIPT ///
+
+    lua_createtable(L, 0, 0);
+    id = lua_gettop(L);
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Script_GetVariable);
+    lua_setfield(L, id, "GetVariable");
+    lua_setglobal(L, "Script");
 }

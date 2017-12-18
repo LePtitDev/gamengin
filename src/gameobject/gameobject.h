@@ -74,7 +74,8 @@ public:
         std::vector<T *> res;
         for (size_t i = 0, sz = components.size(); i < sz; i++) {
             T * tmp = dynamic_cast<T *>(components[i]);
-            res.push_back(tmp);
+            if (tmp != 0)
+                res.push_back(tmp);
         }
         return res;
     }
@@ -85,7 +86,8 @@ public:
         std::vector<T *> res;
         for (size_t i = 0, sz = components.size(); i < sz; i++) {
             const T * tmp = dynamic_cast<const T *>(components[i]);
-            res.push_back(tmp);
+            if (tmp != 0)
+                res.push_back(tmp);
         }
         return res;
     }
