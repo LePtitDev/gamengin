@@ -1,6 +1,8 @@
 #include "assets.h"
 #include "scene.h"
 #include "../geometry/mesh.h"
+#include "../gameobject/gameobject.h"
+#include "../script/lua.h"
 
 #include <cstring>
 #include <fstream>
@@ -20,6 +22,8 @@ Asset * Asset::Load(const char * name, const char * filename) {
         return LoadPLY(name, filename);
     if (std::strcmp(filename + pos, "lua") == 0)
         return LoadLUA(name, filename);
+    if (std::strcmp(filename + pos, "prefab") == 0)
+        return LoadPrefab(name, filename);
     return 0;
 }
 
@@ -109,6 +113,29 @@ Asset * Asset::LoadLUA(const char * name, const char *filename)  {
         *str += c;
     file.close();
     Asset * asset = new Asset(name, (void *)str);
+    Asset::GetAssetList().push_back(asset);
+    return asset;
+}
+
+Asset * Asset::LoadPrefab(const char * name, const char * filename) {
+    std::ifstream file(filename);
+    if (!file.is_open())
+        return 0;
+    std::string * str = new std::string();
+    char c;
+    while (!file.eof() && (c = (char)file.get()) != -1)
+        *str += c;
+    file.close();
+    GameObject * gm = new GameObject();
+    Asset * asset = new Asset(name, (void *)gm);
+    LuaScript script;
+    script.loadLibScript();
+    script.load(str->c_str());
+    LuaScript::Variable vr;
+    vr.type = LuaScript::VariableType::POINTER;
+    vr.v_pointer = (void *)gm;
+    script.createVariable("this", vr);
+    script.execute();
     Asset::GetAssetList().push_back(asset);
     return asset;
 }

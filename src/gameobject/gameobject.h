@@ -94,10 +94,16 @@ public:
     void addChild(GameObject * g);
 
     // Get a child
-    GameObject * getChid(unsigned int i);
+    GameObject * getChild(unsigned int i);
 
     // Get a child
-    const GameObject * getChid(unsigned int i) const;
+    const GameObject * getChild(unsigned int i) const;
+
+    // Get a child
+    GameObject * getChild(const char * n);
+
+    // Get a child
+    const GameObject * getChild(const char * n) const;
 
     // Get children count
     unsigned int childrenCount() const;

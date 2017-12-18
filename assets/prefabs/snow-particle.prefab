@@ -1,0 +1,17 @@
+-- Prefab de la particule de neige
+drop = {}
+drop['prefab'] = this
+-- Tranform de la particule de neige
+GameObject.SetPosition(drop['prefab'], 0.0, 2.0, 0.0)
+GameObject.SetScale(drop['prefab'], 0.05, 0.05, 1.0)
+-- Geometrie de la particule de neige
+drop['geometry'] = GameObject.AddComponent(drop['prefab'], "Geometry")
+Geometry.Assign(drop['geometry'], "geometry:ui-plane")
+-- Materiau de la particule de neige
+drop['material'] = GameObject.AddComponent(drop['prefab'], "Material")
+Material.Assign(drop['material'], "texture:snow")
+-- Controller du camera facing de la particule de neige
+drop['facing-controller'] = GameObject.AddComponent(drop['prefab'], "CameraFacingController")
+-- Rididbody de la particule de neige
+drop['rigidbody'] = GameObject.AddComponent(drop['prefab'], "Rigidbody")
+Rigidbody.SetGravity(drop['rigidbody'], 0.0, -0.05, 0.0)

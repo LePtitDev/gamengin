@@ -12,7 +12,46 @@
 #include "../controller/camera_facing.h"
 #include "../geometry/mesh.h"
 
+#include <sstream>
+
 namespace LuaLib {
+
+int Print(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    std::stringstream ss;
+    for (int i = 1; i <= argc; i++) {
+        switch (lua_type(L, i)) {
+            case LUA_TNIL:
+                ss << "nil";
+                break;
+            case LUA_TBOOLEAN:
+                ss << (lua_toboolean((lua_State *)state, i) ? "true" : "false");
+                break;
+            case LUA_TNUMBER:
+                ss << (float)lua_tonumber((lua_State *)state, i);
+                break;
+            case LUA_TSTRING:
+                ss << lua_tostring((lua_State *)state, i);
+                break;
+            case LUA_TTABLE:
+                ss << "array";
+                break;
+            case LUA_TFUNCTION:
+                ss << "function";
+                break;
+            case LUA_TLIGHTUSERDATA:
+                ss << (void *)lua_topointer((lua_State *)state, i);
+                break;
+            default:
+                ss << "unknow";
+        }
+        if (i < argc)
+            ss << " ";
+    }
+    qInfo() << ss.str().c_str();
+    return 0;
+}
 
 ////////////////////////
 ////// GAMEOBJECT //////
@@ -140,7 +179,7 @@ int GameObject_Instanciate(void * state) {
     GameObject * gm = 0;
     if (lua_type(L, 1) == LUA_TSTRING) {
         Asset * asset = Asset::Find(lua_tostring(L, 1));
-        if (asset == 0 || asset->getData<GameObject>()) {
+        if (asset == 0 || asset->getData<GameObject>() == 0) {
             lua_pushnil(L);
             return 1;
         }
@@ -151,6 +190,63 @@ int GameObject_Instanciate(void * state) {
     GameObject * result = new GameObject();
     gm->clone(result);
     Scene::main->addGameObject(result);
+    lua_pushlightuserdata(L, (void *)result);
+    return 1;
+}
+
+/// Add a child in a gameobject
+///
+/// Parameters :
+/// - gameobject pointer
+/// - gameobject child pointer / gameobject name
+///
+/// Return gameobject child pointer if success and nil otherwise
+int GameObject_AddChild(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushnil(L);
+        return 1;
+    }
+    GameObject * gm = (GameObject *)lua_topointer(L, 1);
+    if (gm == 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+    GameObject * result = 0;
+    if (lua_type(L, 2) == LUA_TSTRING) {
+        result = new GameObject();
+        result->name = lua_tostring(L, 2);
+        gm->addChild(gm);
+    }
+    else {
+        result = (GameObject *)lua_topointer(L, 2);
+        gm->addChild(gm);
+    }
+    lua_pushlightuserdata(L, (void *)result);
+    return 1;
+}
+
+/// Get a child in a gameobject
+///
+/// Parameters :
+/// - gameobject pointer
+/// - gameobject name
+///
+/// Return gameobject child pointer if success and nil otherwise
+int GameObject_GetChild(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushnil(L);
+        return 1;
+    }
+    GameObject * gm = (GameObject *)lua_topointer(L, 1);
+    if (gm == 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+    GameObject * result = gm->getChild(lua_tostring(L, 2));
     lua_pushlightuserdata(L, (void *)result);
     return 1;
 }
@@ -171,7 +267,7 @@ int GameObject_GetPosition(void * state) {
     GameObject * gm = 0;
     if (lua_type(L, 1) == LUA_TSTRING) {
         Asset * asset = Asset::Find(lua_tostring(L, 1));
-        if (asset == 0 || asset->getData<GameObject>()) {
+        if (asset == 0 || asset->getData<GameObject>() == 0) {
             lua_pushnil(L);
             return 1;
         }
@@ -202,7 +298,7 @@ int GameObject_GetRotation(void * state) {
     GameObject * gm = 0;
     if (lua_type(L, 1) == LUA_TSTRING) {
         Asset * asset = Asset::Find(lua_tostring(L, 1));
-        if (asset == 0 || asset->getData<GameObject>()) {
+        if (asset == 0 || asset->getData<GameObject>() == 0) {
             lua_pushnil(L);
             return 1;
         }
@@ -233,7 +329,7 @@ int GameObject_GetScale(void * state) {
     GameObject * gm = 0;
     if (lua_type(L, 1) == LUA_TSTRING) {
         Asset * asset = Asset::Find(lua_tostring(L, 1));
-        if (asset == 0 || asset->getData<GameObject>()) {
+        if (asset == 0 || asset->getData<GameObject>() == 0) {
             lua_pushnil(L);
             return 1;
         }
@@ -267,7 +363,7 @@ int GameObject_SetPosition(void * state) {
     GameObject * gm = 0;
     if (lua_type(L, 1) == LUA_TSTRING) {
         Asset * asset = Asset::Find(lua_tostring(L, 1));
-        if (asset == 0 || asset->getData<GameObject>()) {
+        if (asset == 0 || asset->getData<GameObject>() == 0) {
             lua_pushnil(L);
             return 1;
         }
@@ -302,7 +398,7 @@ int GameObject_SetRotation(void * state) {
     GameObject * gm = 0;
     if (lua_type(L, 1) == LUA_TSTRING) {
         Asset * asset = Asset::Find(lua_tostring(L, 1));
-        if (asset == 0 || asset->getData<GameObject>()) {
+        if (asset == 0 || asset->getData<GameObject>() == 0) {
             lua_pushnil(L);
             return 1;
         }
@@ -337,7 +433,7 @@ int GameObject_SetScale(void * state) {
     GameObject * gm = 0;
     if (lua_type(L, 1) == LUA_TSTRING) {
         Asset * asset = Asset::Find(lua_tostring(L, 1));
-        if (asset == 0 || asset->getData<GameObject>()) {
+        if (asset == 0 || asset->getData<GameObject>() == 0) {
             lua_pushnil(L);
             return 1;
         }
@@ -594,6 +690,9 @@ int ParticleSystem_SetParticuleFrequency(void * state) {
 void LuaScript::loadLibScript() {
     lua_State * L = (lua_State *)state;
 
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Print);
+    lua_setglobal(L, "print");
+
     /// GAMEOBJECT ///
 
     lua_createtable(L, 0, 0);
@@ -604,6 +703,10 @@ void LuaScript::loadLibScript() {
     lua_setfield(L, id, "GetComponent");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_Instanciate);
     lua_setfield(L, id, "Instanciate");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_AddChild);
+    lua_setfield(L, id, "AddChild");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetChild);
+    lua_setfield(L, id, "GetChild");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetPosition);
     lua_setfield(L, id, "GetPosition");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetRotation);

@@ -1,0 +1,9 @@
+-- Prefab du terrain
+terrain = {}
+terrain['prefab'] = this
+-- Geometrie du terrain
+terrain['geometry'] = GameObject.AddComponent(terrain['prefab'], "Geometry")
+Geometry.Assign(terrain['geometry'], "geometry:heightmap")
+-- Materiau du terrain
+terrain['material'] = GameObject.AddComponent(terrain['prefab'], "Material")
+Material.Assign(terrain['material'], "texture:heightmap")

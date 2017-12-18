@@ -19,18 +19,36 @@ const Transform& GameObject::transform() const {
 }
 
 void GameObject::addChild(GameObject * g) {
-    if (g->parent != 0)
+    if (g->parent != 0) {
         g->parent->removeChild(g);
+        g->parent->removeChild(g);
+    }
     children.push_back(g);
     g->parent = this;
 }
 
-GameObject * GameObject::getChid(unsigned int i) {
+GameObject * GameObject::getChild(unsigned int i) {
     return children[i];
 }
 
-const GameObject * GameObject::getChid(unsigned int i) const {
+const GameObject * GameObject::getChild(unsigned int i) const {
     return children[i];
+}
+
+GameObject * GameObject::getChild(const char * n) {
+    for (auto gm : children) {
+        if (gm->name == n)
+            return gm;
+    }
+    return 0;
+}
+
+const GameObject * GameObject::getChild(const char * n) const {
+    for (auto gm : children) {
+        if (gm->name == n)
+            return gm;
+    }
+    return 0;
 }
 
 unsigned int GameObject::childrenCount() const {

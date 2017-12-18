@@ -108,6 +108,9 @@ public:
     // Load a LUA script
     static Asset * LoadLUA(const char * name, const char * filename);
 
+    // Load a prefab
+    static Asset * LoadPrefab(const char * name, const char * filename);
+
 };
 
 #endif // ASSETS_H

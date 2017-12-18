@@ -1,0 +1,9 @@
+-- Prefab de la neige
+snow = {}
+snow['prefab'] = this
+-- Système de particule de la neige
+snow['particle-system'] = GameObject.AddComponent(snow['prefab'], "ParticleSystem")
+ParticleSystem.AssignEmitter(snow['particle-system'], "geometry:plane")
+ParticleSystem.AssignParticle(snow['particle-system'], "prefab:snow-particle")
+ParticleSystem.SetParticleDuration(snow['particle-system'], 2800)
+ParticleSystem.SetParticleFrequency(snow['particle-system'], 20)
