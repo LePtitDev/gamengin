@@ -11,6 +11,7 @@ public:
     enum VariableType {
         NIL,
         BOOLEAN,
+        INTEGER,
         NUMBER,
         STRING,
         TABLE,
@@ -24,6 +25,7 @@ public:
         VariableType type;
         union {
             bool v_boolean;
+            int v_integer;
             float v_number;
             void * v_pointer;
         };

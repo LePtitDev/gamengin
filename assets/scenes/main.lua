@@ -1,6 +1,7 @@
 LoadAsset("texture:heightmap", "res/heightmap-3.png")
 LoadAsset("texture:snow", "res/flocon.png")
 CreateHeightTerrain("geometry:heightmap", "res/heightmap-3.png")
+LoadAsset("script:terrain", "assets/scripts/terrain.lua")
 
 -- Chargement des prefabs
 LoadPrefab("prefab:camera", "assets/prefabs/camera.prefab")

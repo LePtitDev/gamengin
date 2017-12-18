@@ -8,6 +8,7 @@
 #include "../gameobject/camera.h"
 #include "../gameobject/rigidbody.h"
 #include "../gameobject/particle_system.h"
+#include "../gameobject/script.h"
 #include "../controller/camera_rts.h"
 #include "../controller/camera_facing.h"
 #include "../geometry/mesh.h"
@@ -100,8 +101,19 @@ int GameObject_AddComponent(void * state) {
         result = (void *)gm->addComponent<Rigidbody>();
     else if (comp == "ParticleSystem")
         result = (void *)gm->addComponent<ParticleSystem>();
+    else if (comp == "Script")
+        result = (void *)gm->addComponent<ScriptComponent>();
     else {
-        // AJOUTER LES SCRIPTS
+        Asset * scpt = Asset::Find(comp.c_str());
+        if (scpt == 0 || scpt->getData<std::string>() == 0) {
+            lua_pushnil(L);
+            return 1;
+        }
+        result = (void *)gm->addComponent<ScriptComponent>();
+        if (((ScriptComponent *)result)->assign(comp.c_str())) {
+            lua_pushnil(L);
+            return 1;
+        }
     }
     if (result == 0)
         lua_pushnil(L);
@@ -153,8 +165,10 @@ int GameObject_GetComponent(void * state) {
         result = (void *)gm->getComponent<Rigidbody>();
     else if (comp == "ParticleSystem")
         result = (void *)gm->getComponent<ParticleSystem>();
+    else if (comp == "Script")
+        result = (void *)gm->getComponent<ScriptComponent>();
     else {
-        // AJOUTER LES SCRIPTS
+        
     }
     if (result == 0)
         lua_pushnil(L);

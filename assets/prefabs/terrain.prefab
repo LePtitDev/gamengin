@@ -7,3 +7,5 @@ Geometry.Assign(terrain['geometry'], "geometry:heightmap")
 -- Materiau du terrain
 terrain['material'] = GameObject.AddComponent(terrain['prefab'], "Material")
 Material.Assign(terrain['material'], "texture:heightmap")
+
+GameObject.AddComponent(this, "script:terrain")

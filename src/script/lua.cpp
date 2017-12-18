@@ -77,6 +77,9 @@ void LuaScript::pushVariable(const Variable &var) {
     case BOOLEAN:
         lua_pushboolean((lua_State *)state, var.v_boolean ? 1 : 0);
         break;
+    case INTEGER:
+        lua_pushinteger((lua_State *)state, var.v_integer);
+        break;
     case NUMBER:
         lua_pushnumber((lua_State *)state, var.v_number);
         break;
