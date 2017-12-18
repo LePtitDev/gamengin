@@ -1,5 +1,3 @@
-une_variable = "MaVariable"
-print(Script.GetVariable(GameObject.GetComponent(this, "script:terrain"), "une_variable"))
 --function keyPress(key)
 --    print("keyPress", key)
 --end

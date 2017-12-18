@@ -728,7 +728,7 @@ int Script_GetVariable(void * state) {
         return 1;
     }
     LuaScript lscpt_dest(state);
-    scpt->script.pushVariable(lscpt_src.getVariable(lua_tostring(L, 2)));
+    lscpt_dest.pushVariable(scpt->script.getVariable(lua_tostring(L, 2)));
     return 1;
 }
 
@@ -751,8 +751,11 @@ int Script_CallFunction(void * state) {
         lua_pushnil(L);
         return 1;
     }
-    LuaScript lscpt_src(state);
-    scpt->script.pushVariable(lscpt_src.getVariable(lua_tostring(L, 2)));
+    LuaScript lscpt_dest(state);
+    std::vector<LuaScript::Variable> args;
+    for (int i = 0, sz = argc - 2; i < sz; i++)
+        args.push_back(lscpt_dest.getVariable(i + 3));
+    lscpt_dest.pushVariable(scpt->script.callFunction(lua_tostring(L, 2), args.data(), argc - 2));
     return 1;
 }
 
@@ -844,5 +847,7 @@ void LuaScript::loadLibScript() {
     id = lua_gettop(L);
     lua_pushcfunction(L, (lua_CFunction)LuaLib::Script_GetVariable);
     lua_setfield(L, id, "GetVariable");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Script_CallFunction);
+    lua_setfield(L, id, "CallFunction");
     lua_setglobal(L, "Script");
 }
