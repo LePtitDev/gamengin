@@ -79,7 +79,8 @@ SOURCES += \
     src/assets/assets.cpp \
     src/script/gamelib.cpp \
     src/script/scenelib.cpp \
-    src/script/scriptlib.cpp
+    src/script/scriptlib.cpp \
+    src/colliders/boxcollider.cpp
 
 
 HEADERS += \
@@ -127,7 +128,12 @@ HEADERS += \
     include/lua/lzio.h \
     src/assets/assets.h \
     src/assets/scene.h \
-    src/assets/game.h
+    src/assets/game.h \
+    src/gameobject/collider.h \
+    src/geometry/bounds.h \
+    src/geometry/ray.h \
+    src/colliders/boxcollider.h \
+    src/geometry/triangle.h
 
 FORMS += \
 	mainwindow.ui

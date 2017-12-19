@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include "component.h"
+#include "../geometry/ray.h"
 
 #include <QMatrix4x4>
 #include <QOpenGLShaderProgram>
@@ -30,6 +31,9 @@ public:
 
     // Basic constructor
     Camera(GameObject * parent);
+
+    // Get ray camera by screen coordinates
+    Ray getRay(int x, int y) const;
 
     // Toggle to perspective or orthographic
     void toggleView();

@@ -7,6 +7,7 @@
 #include "../gameobject/material.h"
 #include "../gameobject/camera.h"
 #include "../gameobject/rigidbody.h"
+#include "../colliders/boxcollider.h"
 #include "../gameobject/particle_system.h"
 #include "../gameobject/script.h"
 #include "../controller/camera_rts.h"
@@ -99,6 +100,8 @@ int GameObject_AddComponent(void * state) {
         result = (void *)gm->addComponent<CameraFacingController>();
     else if (comp == "Rigidbody")
         result = (void *)gm->addComponent<Rigidbody>();
+    else if (comp == "BoxCollider")
+        result = (void *)gm->addComponent<BoxCollider>();
     else if (comp == "ParticleSystem")
         result = (void *)gm->addComponent<ParticleSystem>();
     else if (comp == "Script")
@@ -163,6 +166,8 @@ int GameObject_GetComponent(void * state) {
         result = (void *)gm->getComponent<CameraFacingController>();
     else if (comp == "Rigidbody")
         result = (void *)gm->getComponent<Rigidbody>();
+    else if (comp == "BoxCollider")
+        result = (void *)gm->getComponent<BoxCollider>();
     else if (comp == "ParticleSystem")
         result = (void *)gm->getComponent<ParticleSystem>();
     else if (comp == "Script")
@@ -267,6 +272,64 @@ int GameObject_GetChild(void * state) {
     }
     GameObject * result = gm->getChild(lua_tostring(L, 2));
     lua_pushlightuserdata(L, (void *)result);
+    return 1;
+}
+
+/// Get gameobject name
+///
+/// Parameters :
+/// - asset name / gameobject pointer
+///
+/// Return name if success and nil otherwise
+int GameObject_GetName(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushnil(L);
+        return 1;
+    }
+    GameObject * gm = 0;
+    if (lua_type(L, 1) == LUA_TSTRING) {
+        Asset * asset = Asset::Find(lua_tostring(L, 1));
+        if (asset == 0 || asset->getData<GameObject>() == 0) {
+            lua_pushnil(L);
+            return 1;
+        }
+        gm = asset->getData<GameObject>();
+    }
+    else
+        gm = (GameObject *)lua_topointer(L, 1);
+    lua_pushstring(L, gm->name.c_str());
+    return 1;
+}
+
+/// Set gameobject name
+///
+/// Parameters :
+/// - asset name / gameobject pointer
+/// - name
+///
+/// Return true if success and false otherwise
+int GameObject_SetName(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    GameObject * gm = 0;
+    if (lua_type(L, 1) == LUA_TSTRING) {
+        Asset * asset = Asset::Find(lua_tostring(L, 1));
+        if (asset == 0 || asset->getData<GameObject>() == 0) {
+            lua_pushnil(L);
+            return 1;
+        }
+        gm = asset->getData<GameObject>();
+    }
+    else
+        gm = (GameObject *)lua_topointer(L, 1);
+    gm->name = lua_tostring(L, 2);
+    lua_pushboolean(L, 1);
     return 1;
 }
 
@@ -468,6 +531,28 @@ int GameObject_SetScale(void * state) {
     return 1;
 }
 
+///////////////////////
+////// COMPONENT //////
+///////////////////////
+
+/// Get gameobject of a component
+///
+/// Parameters :
+/// - component pointer
+///
+/// Return gameobject if success and nil otherwise
+int Component_GetGameObject(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushnil(L);
+        return 1;
+    }
+    Component * comp = (Component *)lua_topointer(L, 1);
+    lua_pushlightuserdata(L, (void *)&comp->gameObject());
+    return 1;
+}
+
 //////////////////////
 ////// GEOMETRY //////
 //////////////////////
@@ -520,6 +605,16 @@ int Material_Assign(void * state) {
     return 1;
 }
 
+////////////////////
+////// CAMERA //////
+////////////////////
+
+/// Get main camera
+int Camera_GetMain(void * state) {
+    lua_pushlightuserdata((lua_State *)state, (void *)Camera::mainCamera);
+    return 1;
+}
+
 ///////////////////////
 ////// RIGIDBODY //////
 ///////////////////////
@@ -568,6 +663,106 @@ int Rigidbody_SetGravity(void * state) {
     rb->gravity.setX(lua_tonumber(L, 2));
     rb->gravity.setY(lua_tonumber(L, 3));
     rb->gravity.setZ(lua_tonumber(L, 4));
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
+//////////////////////////
+////// BOX COLLIDER //////
+//////////////////////////
+
+/// Get box collider offset
+///
+/// Parameters :
+/// - box collider pointer
+///
+/// Return x, y, z if success and nil otherwise
+int BoxCollider_GetOffset(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushnil(L);
+        return 1;
+    }
+    BoxCollider * bc = (BoxCollider *)lua_topointer(L, 1);
+    if (bc == 0)
+        lua_pushnil(L);
+    lua_pushnumber(L, bc->offset.x());
+    lua_pushnumber(L, bc->offset.y());
+    lua_pushnumber(L, bc->offset.z());
+    return 3;
+}
+
+/// Set box collider offset
+///
+/// Parameters :
+/// - box collider pointer
+/// - x coordinate
+/// - y coordinate
+/// - z coordinate
+///
+/// Return true if success and false otherwise
+int BoxCollider_SetOffset(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 4) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    BoxCollider * bc = (BoxCollider *)lua_topointer(L, 1);
+    if (bc == 0)
+        lua_pushboolean(L, 0);
+    bc->offset.setX(lua_tonumber(L, 2));
+    bc->offset.setY(lua_tonumber(L, 3));
+    bc->offset.setZ(lua_tonumber(L, 4));
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
+/// Get box collider size
+///
+/// Parameters :
+/// - box collider pointer
+///
+/// Return x, y, z if success and nil otherwise
+int BoxCollider_GetSize(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushnil(L);
+        return 1;
+    }
+    BoxCollider * bc = (BoxCollider *)lua_topointer(L, 1);
+    if (bc == 0)
+        lua_pushnil(L);
+    lua_pushnumber(L, bc->size.x());
+    lua_pushnumber(L, bc->size.y());
+    lua_pushnumber(L, bc->size.z());
+    return 3;
+}
+
+/// Set box collider size
+///
+/// Parameters :
+/// - box collider pointer
+/// - x coordinate
+/// - y coordinate
+/// - z coordinate
+///
+/// Return true if success and false otherwise
+int BoxCollider_SetSize(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 4) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    BoxCollider * bc = (BoxCollider *)lua_topointer(L, 1);
+    if (bc == 0)
+        lua_pushboolean(L, 0);
+    bc->size.setX(lua_tonumber(L, 2));
+    bc->size.setY(lua_tonumber(L, 3));
+    bc->size.setZ(lua_tonumber(L, 4));
     lua_pushboolean(L, 1);
     return 1;
 }
@@ -781,6 +976,10 @@ void LuaScript::loadLibScript() {
     lua_setfield(L, id, "AddChild");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetChild);
     lua_setfield(L, id, "GetChild");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetName);
+    lua_setfield(L, id, "GetName");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_SetName);
+    lua_setfield(L, id, "SetName");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetPosition);
     lua_setfield(L, id, "GetPosition");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetRotation);
@@ -796,6 +995,14 @@ void LuaScript::loadLibScript() {
     // Méthodes de GameObject
 
     lua_setglobal(L, "GameObject");
+
+    /// COMPONENT ///
+
+    lua_createtable(L, 0, 0);
+    id = lua_gettop(L);
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Component_GetGameObject);
+    lua_setfield(L, id, "GetGameObject");
+    lua_setglobal(L, "Component");
 
     /// GEOMETRY ///
 
@@ -813,6 +1020,14 @@ void LuaScript::loadLibScript() {
     lua_setfield(L, id, "Assign");
     lua_setglobal(L, "Material");
 
+    /// CAMERA ///
+
+    lua_createtable(L, 0, 0);
+    id = lua_gettop(L);
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Camera_GetMain);
+    lua_setfield(L, id, "GetMain");
+    lua_setglobal(L, "Camera");
+
     /// RIGIDBODY ///
 
     lua_createtable(L, 0, 0);
@@ -822,6 +1037,20 @@ void LuaScript::loadLibScript() {
     lua_pushcfunction(L, (lua_CFunction)LuaLib::Rigidbody_SetGravity);
     lua_setfield(L, id, "SetGravity");
     lua_setglobal(L, "Rigidbody");
+
+    /// BOX COLLIDER ///
+
+    lua_createtable(L, 0, 0);
+    id = lua_gettop(L);
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::BoxCollider_GetOffset);
+    lua_setfield(L, id, "GetOffset");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::BoxCollider_SetOffset);
+    lua_setfield(L, id, "SetOffset");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::BoxCollider_GetSize);
+    lua_setfield(L, id, "GetSize");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::BoxCollider_SetSize);
+    lua_setfield(L, id, "SetSize");
+    lua_setglobal(L, "BoxCollider");
 
     /// PARTICULE SYSTEM ///
 

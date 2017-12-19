@@ -1,0 +1,14 @@
+box = {}
+box['prefab'] = this
+
+GameObject.SetName(box['prefab'], "Cube")
+GameObject.SetScale(box['prefab'], 1, 1, 1)
+
+box['geometry'] = GameObject.AddComponent(box['prefab'], "Geometry")
+Geometry.Assign(box['geometry'], "geometry:cube")
+
+box['material'] = GameObject.AddComponent(box['prefab'], "Material")
+Material.Assign(box['material'], "texture:default")
+
+box['collider'] = GameObject.AddComponent(box['prefab'], "BoxCollider")
+BoxCollider.SetSize(box['collider'], 2, 2, 2)

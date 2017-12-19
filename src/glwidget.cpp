@@ -60,6 +60,7 @@ void GLWidget::initShaders() {
 
 void GLWidget::initGame() {
     LuaScript gameScript;
+    Asset::Load("texture:default", "res/default.png");
     Asset * asset = Asset::Load("script:main", DefaultGameScript);
     gameScript.loadLibGame();
     if (asset == 0 || !gameScript.load(asset->getData<std::string>()->c_str())) {
@@ -124,6 +125,8 @@ void GLWidget::initializeGL() {
 }
 
 void GLWidget::resizeGL(int w, int h) {
+    Scene::width = w;
+    Scene::height = h;
     Camera::mainCamera->aspect = (float)w / (float)(h ? h : 1);
 }
 

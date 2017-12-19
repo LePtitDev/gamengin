@@ -26,6 +26,9 @@ private:
 
 public:
 
+    // Scene width and height
+    static int width, height;
+
     // Create and load a scene
     Scene(const char * name, const char * filename) {
         Asset * asset = Asset::Load(name, filename);

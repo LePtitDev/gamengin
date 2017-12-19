@@ -1,5 +1,6 @@
 #include "camera.h"
 #include "gameobject.h"
+#include "../assets/scene.h"
 
 Camera * Camera::mainCamera = 0;
 
@@ -18,6 +19,20 @@ Camera::Camera(GameObject *parent) :
         aspect = mainCamera->aspect;
     }
     mainCamera = this;
+}
+
+Ray Camera::getRay(int mouse_x, int mouse_y) const {
+    float x = (2.0f * (float)mouse_x) / Scene::width - 1.0f;
+    float y = 1.0f - (2.0f * (float)mouse_y) / Scene::height;
+    float z = 1.0f;
+    QVector3D ray_nds(x, y, z);
+    QVector4D ray_clip(ray_nds.x(), ray_nds.y(), -1.0, 1.0);
+    QVector4D ray_eye = getProjection().inverted() * ray_clip;
+    ray_eye.setZ(-1.0);
+    ray_eye.setW(0.0);
+    QVector4D ray_wor4 = (getView().inverted() * ray_eye);
+    QVector3D ray_wor = QVector3D(ray_wor4.x(), ray_wor4.y(), ray_wor4.z()).normalized();
+    return Ray(gameObject().transform().position, ray_wor);
 }
 
 void Camera::toggleView() {

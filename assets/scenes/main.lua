@@ -8,8 +8,10 @@ LoadPrefab("prefab:camera", "assets/prefabs/camera.prefab")
 LoadPrefab("prefab:terrain", "assets/prefabs/terrain.prefab")
 LoadPrefab("prefab:snow-particle", "assets/prefabs/snow-particle.prefab")
 LoadPrefab("prefab:snow", "assets/prefabs/snow.prefab")
+LoadPrefab("prefab:cube", "assets/prefabs/box.prefab")
 
 -- Contenu de la scene
 GameObject.Instanciate("prefab:camera")
 GameObject.Instanciate("prefab:terrain")
 GameObject.Instanciate("prefab:snow")
+GameObject.Instanciate("prefab:cube")
