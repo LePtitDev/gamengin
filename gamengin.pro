@@ -80,7 +80,8 @@ SOURCES += \
     src/script/gamelib.cpp \
     src/script/scenelib.cpp \
     src/script/scriptlib.cpp \
-    src/colliders/boxcollider.cpp
+    src/colliders/boxcollider.cpp \
+    src/gameobject/collider.cpp
 
 
 HEADERS += \

@@ -54,6 +54,15 @@ public:
     // Get name
     const char * getName() const { return name.c_str(); }
 
+    // Get gameobjects count
+    int getCount() const { return (int)objects.size(); }
+
+    // Get gameobjects
+    GameObject ** getObjects() { return objects.data(); }
+
+    // Get gameobjects
+    GameObject * const * getObjects() const { return objects.data(); }
+
     // Add a neww gameobject
     void addGameObject(GameObject * gm) {
         objects.push_back(gm);

@@ -615,6 +615,30 @@ int Camera_GetMain(void * state) {
     return 1;
 }
 
+/// Get camera ray by screen coordinates
+///
+/// Parameters :
+/// - x coordinate
+/// - y coordinate
+///
+/// Return x, y, z, dir_x, dir_y, dir_z if success and nil otherwise
+int Camera_GetRay(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    Ray ray = Camera::mainCamera->getRay((int)lua_tonumber(L, 1), (int)lua_tonumber(L, 2));
+    lua_pushnumber(L, ray.origin.x());
+    lua_pushnumber(L, ray.origin.y());
+    lua_pushnumber(L, ray.origin.z());
+    lua_pushnumber(L, ray.direction.x());
+    lua_pushnumber(L, ray.direction.y());
+    lua_pushnumber(L, ray.direction.z());
+    return 6;
+}
+
 ///////////////////////
 ////// RIGIDBODY //////
 ///////////////////////
@@ -954,6 +978,44 @@ int Script_CallFunction(void * state) {
     return 1;
 }
 
+////////////////////
+////// SCRIPT //////
+////////////////////
+
+/// Send raycast and return first touched object
+///
+/// Parameters :
+/// - x coordinate
+/// - y coordinate
+/// - z coordinate
+/// - dir_x coordinate
+/// - dir_y coordinate
+/// - dir_z coordinate
+///
+/// Return collider, x, y, z if success and nil otherwise
+int Physics_Raycast(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 6) {
+        lua_pushnil(L);
+        return 1;
+    }
+    Ray ray(QVector3D(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3)),
+            QVector3D(lua_tonumber(L, 4), lua_tonumber(L, 5), lua_tonumber(L, 6)));
+    ray.direction.normalize();
+    std::vector<std::pair<Collider *, float>> res = Collider::Raycast(ray);
+    if (res.size() == 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+    lua_pushlightuserdata(L, (void *)res[0].first);
+    QVector3D point = ray.origin + ray.direction * res[0].second;
+    lua_pushnumber(L, point.x());
+    lua_pushnumber(L, point.y());
+    lua_pushnumber(L, point.z());
+    return 4;
+}
+
 }
 
 void LuaScript::loadLibScript() {
@@ -1026,6 +1088,8 @@ void LuaScript::loadLibScript() {
     id = lua_gettop(L);
     lua_pushcfunction(L, (lua_CFunction)LuaLib::Camera_GetMain);
     lua_setfield(L, id, "GetMain");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Camera_GetRay);
+    lua_setfield(L, id, "GetRay");
     lua_setglobal(L, "Camera");
 
     /// RIGIDBODY ///
@@ -1079,4 +1143,12 @@ void LuaScript::loadLibScript() {
     lua_pushcfunction(L, (lua_CFunction)LuaLib::Script_CallFunction);
     lua_setfield(L, id, "CallFunction");
     lua_setglobal(L, "Script");
+
+    /// PHYSICS ///
+
+    lua_createtable(L, 0, 0);
+    id = lua_gettop(L);
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Physics_Raycast);
+    lua_setfield(L, id, "Raycast");
+    lua_setglobal(L, "Physics");
 }

@@ -5,6 +5,8 @@
 #include "gameobject.h"
 #include "../geometry/bounds.h"
 
+#include <vector>
+
 class Collider : public Component {
 
 public:
@@ -26,6 +28,9 @@ public:
 
     // Component override
     virtual void clone(GameObject * g) override = 0;
+
+    // Send a raycast in the scene and get touched collider and their distance
+    static std::vector<std::pair<Collider *, float>> Raycast(const Ray& ray);
 
 };
 

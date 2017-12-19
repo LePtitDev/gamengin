@@ -12,3 +12,5 @@ Material.Assign(box['material'], "texture:default")
 
 box['collider'] = GameObject.AddComponent(box['prefab'], "BoxCollider")
 BoxCollider.SetSize(box['collider'], 2, 2, 2)
+
+GameObject.AddComponent(this, "script:cube")
