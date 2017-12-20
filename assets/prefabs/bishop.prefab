@@ -27,15 +27,41 @@ Geometry.Assign(base['geometry'], "geometry:cylinder")
 base['material'] = GameObject.AddComponent(base['prefab'], "Material")
 Material.Assign(base['material'], "texture:default")
 
+-- HEAD BASE CHILD --
+
+head_base = {}
+head_base['prefab'] = GameObject.AddChild(this, "HeadBase")
+GameObject.SetPosition(head_base['prefab'], 0, 1.5, 0)
+GameObject.SetScale(head_base['prefab'], 0.4, 0.15, 0.4)
+
+head_base['geometry'] = GameObject.AddComponent(head_base['prefab'], "Geometry")
+Geometry.Assign(head_base['geometry'], "geometry:cylinder")
+
+head_base['material'] = GameObject.AddComponent(head_base['prefab'], "Material")
+Material.Assign(head_base['material'], "texture:default")
+
 -- HEAD CHILD --
 
 head = {}
 head['prefab'] = GameObject.AddChild(this, "Head")
-GameObject.SetPosition(head['prefab'], 0, 1.5, 0)
-GameObject.SetScale(head['prefab'], 0.4, 0.2, 0.4)
+GameObject.SetPosition(head['prefab'], 0, 2, 0)
+GameObject.SetScale(head['prefab'], 0.4, 0.4, 0.4)
 
 head['geometry'] = GameObject.AddComponent(head['prefab'], "Geometry")
-Geometry.Assign(head['geometry'], "geometry:cylinder")
+Geometry.Assign(head['geometry'], "geometry:cone")
 
 head['material'] = GameObject.AddComponent(head['prefab'], "Material")
 Material.Assign(head['material'], "texture:default")
+
+-- HEAD BALL CHILD --
+
+head_ball = {}
+head_ball['prefab'] = GameObject.AddChild(this, "HeadBall")
+GameObject.SetPosition(head_ball['prefab'], 0, 2, 0)
+GameObject.SetScale(head_ball['prefab'], 0.4, 0.4, 0.4)
+
+head_ball['geometry'] = GameObject.AddComponent(head_ball['prefab'], "Geometry")
+Geometry.Assign(head_ball['geometry'], "geometry:cone")
+
+head_ball['material'] = GameObject.AddComponent(head_ball['prefab'], "Material")
+Material.Assign(head_ball['material'], "texture:default")

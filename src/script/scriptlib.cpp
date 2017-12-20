@@ -357,7 +357,7 @@ int GameObject_GetPosition(void * state) {
     }
     else
         gm = (GameObject *)lua_topointer(L, 1);
-    QVector3D& pos = gm->transform().position();
+    QVector3D pos = gm->transform().position();
     lua_pushnumber(L, pos.x());
     lua_pushnumber(L, pos.y());
     lua_pushnumber(L, pos.z());
@@ -388,7 +388,7 @@ int GameObject_GetRotation(void * state) {
     }
     else
         gm = (GameObject *)lua_topointer(L, 1);
-    QQuaternion& rot = gm->transform().rotation();
+    QQuaternion rot = gm->transform().rotation();
     lua_pushnumber(L, rot.x());
     lua_pushnumber(L, rot.y());
     lua_pushnumber(L, rot.z());
@@ -419,7 +419,7 @@ int GameObject_GetScale(void * state) {
     }
     else
         gm = (GameObject *)lua_topointer(L, 1);
-    QVector3D& scale = gm->transform().scale();
+    QVector3D scale = gm->transform().scale();
     lua_pushnumber(L, scale.x());
     lua_pushnumber(L, scale.y());
     lua_pushnumber(L, scale.z());
