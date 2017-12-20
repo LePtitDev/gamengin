@@ -35,6 +35,12 @@ public:
     // Basic constructor
     GameObject();
 
+    // Get gameobject parent
+    GameObject * getParent() { return parent; }
+
+    // Get gameobject parent
+    const GameObject * getParent() const { return parent; }
+
     // Get transform component
     Transform& transform();
 

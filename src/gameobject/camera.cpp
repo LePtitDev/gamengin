@@ -32,7 +32,7 @@ Ray Camera::getRay(int mouse_x, int mouse_y) const {
     ray_eye.setW(0.0);
     QVector4D ray_wor4 = (getView().inverted() * ray_eye);
     QVector3D ray_wor = QVector3D(ray_wor4.x(), ray_wor4.y(), ray_wor4.z()).normalized();
-    return Ray(gameObject().transform().position, ray_wor);
+    return Ray(gameObject().transform().position(), ray_wor);
 }
 
 void Camera::toggleView() {
@@ -53,7 +53,7 @@ QMatrix4x4 Camera::getView() const {
     QMatrix4x4 matrix;
     Transform& t = gameObject().transform();
     matrix.setToIdentity();
-    matrix.lookAt(t.position, t.position + t.rotation * QVector3D(0.0f, 0.0f, 1.0f), t.rotation * QVector3D(0.0f, 1.0f, 0.0f));
+    matrix.lookAt(t.position(), t.position() + t.rotation() * QVector3D(0.0f, 0.0f, 1.0f), t.rotation() * QVector3D(0.0f, 1.0f, 0.0f));
     return matrix;
 }
 
@@ -63,13 +63,13 @@ void Camera::toggleView(bool p) {
 
 void Camera::lookAt(QVector3D pos) {
     Transform& t = gameObject().transform();
-    t.rotation = QQuaternion::fromDirection(pos - t.position, QVector3D(0.0f, 1.0f, 0.0f));
+    t.rotation() = QQuaternion::fromDirection(pos - t.position(), QVector3D(0.0f, 1.0f, 0.0f));
 }
 
 void Camera::apply(QOpenGLShaderProgram * program) {
     program->setUniformValue("m_projection", getProjection());
     program->setUniformValue("m_view", getView());
-    program->setUniformValue("v_camerapos", gameObject().transform().position);
+    program->setUniformValue("v_camerapos", gameObject().transform().position());
 }
 
 void Camera::destroy() {

@@ -15,7 +15,7 @@ void Rigidbody::update() {
     }
     float time = (float)timer.elapsed() / 1000.0f;
     velocity += gravity * (9.81f * time);
-    gameObject().transform().position += velocity * time;
+    gameObject().transform().localPosition += velocity * time;
     timer.restart();
 }
 

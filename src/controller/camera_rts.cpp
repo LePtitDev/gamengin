@@ -20,7 +20,7 @@ CameraRTSController::CameraRTSController(GameObject *parent) :
 void CameraRTSController::update() {
     if (!timer.isValid()) {
         timer.start();
-        gameObject().transform().position = center + QVector3D(0.0f, 1.0f, 1.0f) * distance * (zoom > 0.0f ? 1.0f / (1.0f + zoom) : 1.0f - zoom);
+        gameObject().transform().setPosition(center + QVector3D(0.0f, 1.0f, 1.0f) * distance * (zoom > 0.0f ? 1.0f / (1.0f + zoom) : 1.0f - zoom));
         return;
     }
     float elapsed = (float)timer.elapsed() / 1000.0;
@@ -36,7 +36,7 @@ void CameraRTSController::update() {
             zoom = maxZoom;
     }
     float rad = qDegreesToRadians(rotation);
-    QVector3D forward = gameObject().transform().rotation * QVector3D(0.0f, 0.0f, 1.0f);
+    QVector3D forward = gameObject().transform().rotation() * QVector3D(0.0f, 0.0f, 1.0f);
     QVector3D moving;
     forward.setY(0);
     for (size_t i = 0, sz = keyPressed.size(); i < sz; i++) {
@@ -58,8 +58,8 @@ void CameraRTSController::update() {
     moving.normalize();
     moving *= translationSpeed;
     center += moving;
-    gameObject().transform().position = center + QVector3D(-qSin(rad), (zoom >= 0.0f ? 1.0f / (1.0f + zoom) : 2.0f - 1.0f / (1.0f - zoom)), -qCos(rad)) * distance * (zoom > 0.0f ? 1.0f / (1.0f + zoom) : 1.0f - zoom);
-    gameObject().transform().rotation = QQuaternion::fromDirection(QVector3D(qSin(rad), -qDegreesToRadians(45.0f) * (zoom >= 0.0f ? 1.0f / (1.0f + zoom) : 2.0f - 1.0f / (1.0f - zoom)), qCos(rad)), QVector3D(0.0f, 1.0f, 0.0f));
+    gameObject().transform().setPosition(center + QVector3D(-qSin(rad), (zoom >= 0.0f ? 1.0f / (1.0f + zoom) : 2.0f - 1.0f / (1.0f - zoom)), -qCos(rad)) * distance * (zoom > 0.0f ? 1.0f / (1.0f + zoom) : 1.0f - zoom));
+    gameObject().transform().setRotation(QQuaternion::fromDirection(QVector3D(qSin(rad), -qDegreesToRadians(45.0f) * (zoom >= 0.0f ? 1.0f / (1.0f + zoom) : 2.0f - 1.0f / (1.0f - zoom)), qCos(rad)), QVector3D(0.0f, 1.0f, 0.0f)));
     timer.restart();
     wheelDelta = 0;
     mouseMove = QPoint();

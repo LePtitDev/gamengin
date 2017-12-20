@@ -1,0 +1,8 @@
+-- Prefab de la camera
+camera = {}
+camera['prefab'] = this
+-- Tranform de la camera
+GameObject.SetPosition(camera['prefab'], 1.0, 1.0, 0.0)
+-- Composants de la camera
+camera['camera'] = GameObject.AddComponent(camera['prefab'], "Camera")
+camera['rts-controller'] = GameObject.AddComponent(camera['prefab'], "CameraRTSController")

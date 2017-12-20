@@ -357,7 +357,7 @@ int GameObject_GetPosition(void * state) {
     }
     else
         gm = (GameObject *)lua_topointer(L, 1);
-    QVector3D& pos = gm->transform().position;
+    QVector3D& pos = gm->transform().position();
     lua_pushnumber(L, pos.x());
     lua_pushnumber(L, pos.y());
     lua_pushnumber(L, pos.z());
@@ -388,7 +388,7 @@ int GameObject_GetRotation(void * state) {
     }
     else
         gm = (GameObject *)lua_topointer(L, 1);
-    QQuaternion& rot = gm->transform().rotation;
+    QQuaternion& rot = gm->transform().rotation();
     lua_pushnumber(L, rot.x());
     lua_pushnumber(L, rot.y());
     lua_pushnumber(L, rot.z());
@@ -419,7 +419,7 @@ int GameObject_GetScale(void * state) {
     }
     else
         gm = (GameObject *)lua_topointer(L, 1);
-    QVector3D& scale = gm->transform().scale;
+    QVector3D& scale = gm->transform().scale();
     lua_pushnumber(L, scale.x());
     lua_pushnumber(L, scale.y());
     lua_pushnumber(L, scale.z());
@@ -453,10 +453,7 @@ int GameObject_SetPosition(void * state) {
     }
     else
         gm = (GameObject *)lua_topointer(L, 1);
-    QVector3D& pos = gm->transform().position;
-    pos.setX(lua_tonumber(L, 2));
-    pos.setY(lua_tonumber(L, 3));
-    pos.setZ(lua_tonumber(L, 4));
+    gm->transform().setPosition(QVector3D(lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4)));
     lua_pushboolean(L, 1);
     return 1;
 }
@@ -488,10 +485,7 @@ int GameObject_SetRotation(void * state) {
     }
     else
         gm = (GameObject *)lua_topointer(L, 1);
-    QQuaternion& rot = gm->transform().rotation;
-    rot.setX(lua_tonumber(L, 2));
-    rot.setY(lua_tonumber(L, 3));
-    rot.setZ(lua_tonumber(L, 4));
+    gm->transform().setRotation(QQuaternion::fromEulerAngles(QVector3D(lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4))));
     lua_pushboolean(L, 1);
     return 1;
 }
@@ -523,10 +517,7 @@ int GameObject_SetScale(void * state) {
     }
     else
         gm = (GameObject *)lua_topointer(L, 1);
-    QVector3D& scale = gm->transform().scale;
-    scale.setX(lua_tonumber(L, 2));
-    scale.setY(lua_tonumber(L, 3));
-    scale.setZ(lua_tonumber(L, 4));
+    gm->transform().setScale(QVector3D(lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4)));
     lua_pushboolean(L, 1);
     return 1;
 }

@@ -207,9 +207,9 @@ void GameObject::paintGL(QOpenGLShaderProgram *program) {
         Transform * transform = getComponent<Transform>();
         QMatrix4x4 matrix;
         matrix.setToIdentity();
-        matrix.translate(transform->position);
-        matrix.rotate(transform->rotation);
-        matrix.scale(transform->scale);
+        matrix.translate(transform->position());
+        matrix.rotate(transform->rotation());
+        matrix.scale(transform->scale());
         program->setUniformValue("m_model", matrix);
 
         geometry->draw(program);

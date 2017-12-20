@@ -41,10 +41,10 @@ void ParticleSystem::update() {
             float t1 = dis(randomizer) * (1.0f - t0);
             float t2 = 1.0f - t0 - t1;
             QVector3D pos = particleEmitter->getVertex(particleEmitter->getTriangle(triangle)[0]) * t0 + particleEmitter->getVertex(particleEmitter->getTriangle(triangle)[1]) * t1 + particleEmitter->getVertex(particleEmitter->getTriangle(triangle)[2]) * t2;
-            g->transform().position += pos;
+            g->transform().localPosition += pos;
         }
         else {
-            g->transform().position += particleEmitter->getVertex(randomizer() % particleEmitter->vertexCount());
+            g->transform().localPosition += particleEmitter->getVertex(randomizer() % particleEmitter->vertexCount());
         }
         particles.push_back(g);
         gameObject().addChild(g);

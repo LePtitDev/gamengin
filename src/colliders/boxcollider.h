@@ -16,17 +16,19 @@ public:
     // Get bounds
     virtual Bounds bounds() const {
         Transform& transform = gameObject().transform();
+        QVector3D position = transform.position();
+        QQuaternion rotation = transform.rotation();
         Bounds result;
-        result.center = transform.position + transform.rotation * offset;
+        result.center = transform.position() + transform.rotation() * offset;
         QVector3D halfSize = size * 0.5f;
-        result.encapsulate(transform.position + transform.rotation * (offset - QVector3D(-halfSize.x(), -halfSize.y(), -halfSize.z())));
-        result.encapsulate(transform.position + transform.rotation * (offset - QVector3D(-halfSize.x(), -halfSize.y(),  halfSize.z())));
-        result.encapsulate(transform.position + transform.rotation * (offset - QVector3D(-halfSize.x(),  halfSize.y(), -halfSize.z())));
-        result.encapsulate(transform.position + transform.rotation * (offset - QVector3D(-halfSize.x(),  halfSize.y(),  halfSize.z())));
-        result.encapsulate(transform.position + transform.rotation * (offset - QVector3D( halfSize.x(), -halfSize.y(), -halfSize.z())));
-        result.encapsulate(transform.position + transform.rotation * (offset - QVector3D( halfSize.x(), -halfSize.y(),  halfSize.z())));
-        result.encapsulate(transform.position + transform.rotation * (offset - QVector3D( halfSize.x(),  halfSize.y(), -halfSize.z())));
-        result.encapsulate(transform.position + transform.rotation * (offset - QVector3D( halfSize.x(),  halfSize.y(),  halfSize.z())));
+        result.encapsulate(position + rotation * (offset - QVector3D(-halfSize.x(), -halfSize.y(), -halfSize.z())));
+        result.encapsulate(position + rotation * (offset - QVector3D(-halfSize.x(), -halfSize.y(),  halfSize.z())));
+        result.encapsulate(position + rotation * (offset - QVector3D(-halfSize.x(),  halfSize.y(), -halfSize.z())));
+        result.encapsulate(position + rotation * (offset - QVector3D(-halfSize.x(),  halfSize.y(),  halfSize.z())));
+        result.encapsulate(position + rotation * (offset - QVector3D( halfSize.x(), -halfSize.y(), -halfSize.z())));
+        result.encapsulate(position + rotation * (offset - QVector3D( halfSize.x(), -halfSize.y(),  halfSize.z())));
+        result.encapsulate(position + rotation * (offset - QVector3D( halfSize.x(),  halfSize.y(), -halfSize.z())));
+        result.encapsulate(position + rotation * (offset - QVector3D( halfSize.x(),  halfSize.y(),  halfSize.z())));
         return result;
     }
 

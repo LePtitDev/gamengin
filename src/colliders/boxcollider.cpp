@@ -5,18 +5,20 @@
 
 bool BoxCollider::intersectRay(const Ray &ray, float &distance) const {
     Transform& transform = gameObject().transform();
+    QVector3D position = transform.position();
+    QQuaternion rotation = transform.rotation();
     Bounds bound;
-    bound.center = transform.position + transform.rotation * offset;
+    bound.center = position + rotation * offset;
     QVector3D halfSize = size * 0.5f;
     QVector3D points[] = {
-        transform.position + transform.rotation * (offset - QVector3D(-halfSize.x(), -halfSize.y(), -halfSize.z())),
-        transform.position + transform.rotation * (offset - QVector3D(-halfSize.x(), -halfSize.y(),  halfSize.z())),
-        transform.position + transform.rotation * (offset - QVector3D(-halfSize.x(),  halfSize.y(), -halfSize.z())),
-        transform.position + transform.rotation * (offset - QVector3D(-halfSize.x(),  halfSize.y(),  halfSize.z())),
-        transform.position + transform.rotation * (offset - QVector3D( halfSize.x(), -halfSize.y(), -halfSize.z())),
-        transform.position + transform.rotation * (offset - QVector3D( halfSize.x(), -halfSize.y(),  halfSize.z())),
-        transform.position + transform.rotation * (offset - QVector3D( halfSize.x(),  halfSize.y(), -halfSize.z())),
-        transform.position + transform.rotation * (offset - QVector3D( halfSize.x(),  halfSize.y(),  halfSize.z()))
+        position + rotation * (offset - QVector3D(-halfSize.x(), -halfSize.y(), -halfSize.z())),
+        position + rotation * (offset - QVector3D(-halfSize.x(), -halfSize.y(),  halfSize.z())),
+        position + rotation * (offset - QVector3D(-halfSize.x(),  halfSize.y(), -halfSize.z())),
+        position + rotation * (offset - QVector3D(-halfSize.x(),  halfSize.y(),  halfSize.z())),
+        position + rotation * (offset - QVector3D( halfSize.x(), -halfSize.y(), -halfSize.z())),
+        position + rotation * (offset - QVector3D( halfSize.x(), -halfSize.y(),  halfSize.z())),
+        position + rotation * (offset - QVector3D( halfSize.x(),  halfSize.y(), -halfSize.z())),
+        position + rotation * (offset - QVector3D( halfSize.x(),  halfSize.y(),  halfSize.z()))
     };
     for (auto p : points)
         bound.encapsulate(p);
