@@ -1,12 +1,12 @@
-bishop = {}
-GameObject.SetName(this, "Bishop")
+pawn = {}
+GameObject.SetName(this, "Pawn")
 
 -- BODY CHILD --
 
 body = {}
 body['prefab'] = GameObject.AddChild(this, "Body")
 GameObject.SetPosition(body['prefab'], 0, 1, 0)
-GameObject.SetScale(body['prefab'], 0.5, 1, 0.5)
+GameObject.SetScale(body['prefab'], 0.6, 1, 0.6)
 
 body['geometry'] = GameObject.AddComponent(body['prefab'], "Geometry")
 Geometry.Assign(body['geometry'], "geometry:cone")
@@ -31,7 +31,7 @@ Material.Assign(base['material'], "texture:default")
 
 head_base = {}
 head_base['prefab'] = GameObject.AddChild(this, "HeadBase")
-GameObject.SetPosition(head_base['prefab'], 0, 1.5, 0)
+GameObject.SetPosition(head_base['prefab'], 0, 1.7, 0)
 GameObject.SetScale(head_base['prefab'], 0.4, 0.15, 0.4)
 
 head_base['geometry'] = GameObject.AddComponent(head_base['prefab'], "Geometry")
@@ -45,7 +45,8 @@ Material.Assign(head_base['material'], "texture:default")
 head = {}
 head['prefab'] = GameObject.AddChild(this, "Head")
 GameObject.SetPosition(head['prefab'], 0, 2, 0)
-GameObject.SetScale(head['prefab'], 0.4, 0.4, 0.4)
+GameObject.SetRotation(head['prefab'], 180, 0, 0)
+GameObject.SetScale(head['prefab'], 0.3, 0.4, 0.3)
 
 head['geometry'] = GameObject.AddComponent(head['prefab'], "Geometry")
 Geometry.Assign(head['geometry'], "geometry:cone")
@@ -53,15 +54,15 @@ Geometry.Assign(head['geometry'], "geometry:cone")
 head['material'] = GameObject.AddComponent(head['prefab'], "Material")
 Material.Assign(head['material'], "texture:default")
 
--- HEAD BALL CHILD --
+-- BALL CHILD --
 
-head_ball = {}
-head_ball['prefab'] = GameObject.AddChild(this, "HeadBall")
-GameObject.SetPosition(head_ball['prefab'], 0, 2.4, 0)
-GameObject.SetScale(head_ball['prefab'], 0.2, 0.2, 0.2)
+ball = {}
+ball['prefab'] = GameObject.AddChild(this, "Ball")
+GameObject.SetPosition(ball['prefab'], 0, 2.4, 0)
+GameObject.SetScale(ball['prefab'], 0.25, 0.25, 0.25)
 
-head_ball['geometry'] = GameObject.AddComponent(head_ball['prefab'], "Geometry")
-Geometry.Assign(head_ball['geometry'], "geometry:sphere")
+ball['geometry'] = GameObject.AddComponent(ball['prefab'], "Geometry")
+Geometry.Assign(ball['geometry'], "geometry:sphere")
 
-head_ball['material'] = GameObject.AddComponent(head_ball['prefab'], "Material")
-Material.Assign(head_ball['material'], "texture:default")
+ball['material'] = GameObject.AddComponent(ball['prefab'], "Material")
+Material.Assign(ball['material'], "texture:default")

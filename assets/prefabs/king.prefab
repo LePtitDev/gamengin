@@ -1,12 +1,12 @@
-bishop = {}
-GameObject.SetName(this, "Bishop")
+pawn = {}
+GameObject.SetName(this, "Pawn")
 
 -- BODY CHILD --
 
 body = {}
 body['prefab'] = GameObject.AddChild(this, "Body")
 GameObject.SetPosition(body['prefab'], 0, 1, 0)
-GameObject.SetScale(body['prefab'], 0.5, 1, 0.5)
+GameObject.SetScale(body['prefab'], 0.6, 1, 0.6)
 
 body['geometry'] = GameObject.AddComponent(body['prefab'], "Geometry")
 Geometry.Assign(body['geometry'], "geometry:cone")
@@ -31,7 +31,7 @@ Material.Assign(base['material'], "texture:default")
 
 head_base = {}
 head_base['prefab'] = GameObject.AddChild(this, "HeadBase")
-GameObject.SetPosition(head_base['prefab'], 0, 1.5, 0)
+GameObject.SetPosition(head_base['prefab'], 0, 1.7, 0)
 GameObject.SetScale(head_base['prefab'], 0.4, 0.15, 0.4)
 
 head_base['geometry'] = GameObject.AddComponent(head_base['prefab'], "Geometry")
@@ -45,7 +45,8 @@ Material.Assign(head_base['material'], "texture:default")
 head = {}
 head['prefab'] = GameObject.AddChild(this, "Head")
 GameObject.SetPosition(head['prefab'], 0, 2, 0)
-GameObject.SetScale(head['prefab'], 0.4, 0.4, 0.4)
+GameObject.SetRotation(head['prefab'], 180, 0, 0)
+GameObject.SetScale(head['prefab'], 0.3, 0.4, 0.3)
 
 head['geometry'] = GameObject.AddComponent(head['prefab'], "Geometry")
 Geometry.Assign(head['geometry'], "geometry:cone")
@@ -53,15 +54,26 @@ Geometry.Assign(head['geometry'], "geometry:cone")
 head['material'] = GameObject.AddComponent(head['prefab'], "Material")
 Material.Assign(head['material'], "texture:default")
 
--- HEAD BALL CHILD --
+-- CROSS CHILD --
 
-head_ball = {}
-head_ball['prefab'] = GameObject.AddChild(this, "HeadBall")
-GameObject.SetPosition(head_ball['prefab'], 0, 2.4, 0)
-GameObject.SetScale(head_ball['prefab'], 0.2, 0.2, 0.2)
+cross_v = {}
+cross_v['prefab'] = GameObject.AddChild(this, "CrossVertical")
+GameObject.SetPosition(cross_v['prefab'], 0, 2.6, 0)
+GameObject.SetScale(cross_v['prefab'], 0.05, 0.2, 0.025)
 
-head_ball['geometry'] = GameObject.AddComponent(head_ball['prefab'], "Geometry")
-Geometry.Assign(head_ball['geometry'], "geometry:sphere")
+cross_v['geometry'] = GameObject.AddComponent(cross_v['prefab'], "Geometry")
+Geometry.Assign(cross_v['geometry'], "geometry:cube")
 
-head_ball['material'] = GameObject.AddComponent(head_ball['prefab'], "Material")
-Material.Assign(head_ball['material'], "texture:default")
+cross_v['material'] = GameObject.AddComponent(cross_v['prefab'], "Material")
+Material.Assign(cross_v['material'], "texture:default")
+
+cross_h = {}
+cross_h['prefab'] = GameObject.AddChild(this, "CrossHorizontal")
+GameObject.SetPosition(cross_h['prefab'], 0, 2.7, 0)
+GameObject.SetScale(cross_h['prefab'], 0.15, 0.05, 0.025)
+
+cross_h['geometry'] = GameObject.AddComponent(cross_h['prefab'], "Geometry")
+Geometry.Assign(cross_h['geometry'], "geometry:cube")
+
+cross_h['material'] = GameObject.AddComponent(cross_h['prefab'], "Material")
+Material.Assign(cross_h['material'], "texture:default")
