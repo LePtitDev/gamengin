@@ -1,0 +1,41 @@
+pawn = {}
+GameObject.SetName(this, "Pawn")
+
+-- BODY CHILD --
+
+body = {}
+body['prefab'] = GameObject.AddChild(this, "Body")
+GameObject.SetPosition(body['prefab'], 0, 1, 0)
+GameObject.SetScale(body['prefab'], 0.5, 1, 0.5)
+
+body['geometry'] = GameObject.AddComponent(body['prefab'], "Geometry")
+Geometry.Assign(body['geometry'], "geometry:cone")
+
+body['material'] = GameObject.AddComponent(body['prefab'], "Material")
+Material.Assign(body['material'], "texture:default")
+
+-- BASE CHILD --
+
+base = {}
+base['prefab'] = GameObject.AddChild(this, "Base")
+GameObject.SetPosition(base['prefab'], 0, 0.1, 0)
+GameObject.SetScale(base['prefab'], 0.7, 0.2, 0.7)
+
+base['geometry'] = GameObject.AddComponent(base['prefab'], "Geometry")
+Geometry.Assign(base['geometry'], "geometry:cylinder")
+
+base['material'] = GameObject.AddComponent(base['prefab'], "Material")
+Material.Assign(base['material'], "texture:default")
+
+-- HEAD CHILD --
+
+head = {}
+head['prefab'] = GameObject.AddChild(this, "Head")
+GameObject.SetPosition(head['prefab'], 0, 1.5, 0)
+GameObject.SetScale(head['prefab'], 0.5, 0.5, 0.5)
+
+head['geometry'] = GameObject.AddComponent(head['prefab'], "Geometry")
+Geometry.Assign(head['geometry'], "geometry:sphere")
+
+head['material'] = GameObject.AddComponent(head['prefab'], "Material")
+Material.Assign(head['material'], "texture:default")

@@ -241,11 +241,11 @@ int GameObject_AddChild(void * state) {
     if (lua_type(L, 2) == LUA_TSTRING) {
         result = new GameObject();
         result->name = lua_tostring(L, 2);
-        gm->addChild(gm);
+        gm->addChild(result);
     }
     else {
         result = (GameObject *)lua_topointer(L, 2);
-        gm->addChild(gm);
+        gm->addChild(result);
     }
     lua_pushlightuserdata(L, (void *)result);
     return 1;
