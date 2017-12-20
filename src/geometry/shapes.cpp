@@ -1,6 +1,10 @@
 #include "shapes.h"
 #include "../assets/assets.h"
 
+#include <cmath>
+
+# define M_PI 3.14159265358979323846
+
 void GeometryCube(const char * name) {
     Mesh * mesh = new Mesh();
     // Vertex for face 0
@@ -106,6 +110,71 @@ void GeometryTerrain(const char * name, const QImage& heightmap) {
             mesh->addTriangle(i * width + j, i * width + j + 1, (i + 1) * width + j);
             mesh->addTriangle((i + 1) * width + j, i * width + j + 1, (i + 1) * width + j + 1);
         }
+    }
+
+    mesh->refreshBuffers();
+    Asset::Add(new Asset(name, (void *)mesh));
+}
+
+void GeometrySphere(const char * name, int nbU) {
+    Mesh * mesh = new Mesh();
+    for (int i = 0; i < nbU; i++) {
+        float t = (float)i / (float)(nbU - 1);
+        float u = t * M_PI;
+        float y = std::cos(u), ys = std::sin(u);
+        for (int j = 0; j < nbU; j++) {
+            float k = (float)j / (float)(nbU - 1);
+            float v = k * 2.0f * M_PI;
+            float x = std::cos(v) * ys, z = std::sin(v) * ys;
+            mesh->addVertex(QVector3D(x, y, z), QVector2D(t, 1.0f - k));
+        }
+    }
+    for (int i = 0; i < nbU - 1; i++) {
+        for (int j = 0; j < nbU - 1; j++) {
+            mesh->addTriangle(i * nbU + j, i * nbU + j + 1, (i + 1) * nbU + j);
+            mesh->addTriangle(i * nbU + j + 1, (i + 1) * nbU + j + 1, (i + 1) * nbU + j);
+        }
+    }
+
+    mesh->refreshBuffers();
+    Asset::Add(new Asset(name, (void *)mesh));
+}
+
+void GeometryCylinder(const char * name, int nbU) {
+    Mesh * mesh = new Mesh();
+    for (int i = 0; i < nbU; i++) {
+        float t = (float)i / (float)(nbU - 1);
+        float u = t * 2.0f * M_PI;
+        float x = std::cos(u), z = std::sin(u);
+        mesh->addVertex(QVector3D(x, -1.0f, z), QVector2D(t, 0.0f));
+        mesh->addVertex(QVector3D(x,  1.0f, z), QVector2D(t, 1.0f));
+    }
+    mesh->addVertex(QVector3D(0.0f, -1.0f, 0.0f), QVector2D(0.5f, 0.5f));
+    mesh->addVertex(QVector3D(0.0f,  1.0f, 0.0f), QVector2D(0.5f, 0.5f));
+    for (int i = 0; i < nbU - 1; i++) {
+        mesh->addTriangle(i * 2, i * 2 + 1, i * 2 + 2);
+        mesh->addTriangle(i * 2 + 1, i * 2 + 3, i * 2 + 2);
+        mesh->addTriangle(nbU * 2, i * 2 + 2, i * 2);
+        mesh->addTriangle(nbU * 2 + 1, i * 2 + 3, i * 2 + 1);
+    }
+
+    mesh->refreshBuffers();
+    Asset::Add(new Asset(name, (void *)mesh));
+}
+
+void GeometryCone(const char * name, int nbU) {
+    Mesh * mesh = new Mesh();
+    for (int i = 0; i < nbU; i++) {
+        float t = (float)i / (float)(nbU - 1);
+        float u = t * 2.0f * M_PI;
+        float x = std::cos(u), z = std::sin(u);
+        mesh->addVertex(QVector3D(x, -1.0f, z), QVector2D(t, 0.0f));
+    }
+    mesh->addVertex(QVector3D(0.0f,  1.0f, 0.0f), QVector2D(0.5f, 1.0f));
+    mesh->addVertex(QVector3D(0.0f, -1.0f, 0.0f), QVector2D(0.5f, 0.5f));
+    for (int i = 0; i < nbU - 1; i++) {
+        mesh->addTriangle(nbU, i + 1, i);
+        mesh->addTriangle(nbU + 1, i, i + 1);
     }
 
     mesh->refreshBuffers();

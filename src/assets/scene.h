@@ -38,6 +38,9 @@ public:
         GeometryCube("geometry:cube");
         GeometryPlane("geometry:plane");
         GeometryUIPlane("geometry:ui-plane");
+        GeometrySphere("geometry:sphere");
+        GeometryCylinder("geometry:cylinder");
+        GeometryCone("geometry:cone");
         LuaScript script;
         script.loadLibScene();
         script.loadLibScript();
