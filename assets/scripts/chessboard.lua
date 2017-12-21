@@ -7,6 +7,9 @@ lastUpdate = GetTime()
 -- Piece movement animation
 moveAnim = nil
 
+-- Killed pieces list
+killedPieces = nil
+
 -- Init chessboard
 function start()
     chess = {
@@ -46,6 +49,7 @@ function start()
         { i=7, j=6, team=1, piece="Knight", alive=true, pointer=GameObject.Instanciate("prefab:knight-black") },
         { i=7, j=7, team=1, piece="Rook", alive=true, pointer=GameObject.Instanciate("prefab:rook-black") }
     }
+    killedPieces = {[0] = {}, [1] = {}}
 
     for i, p in ipairs(chess) do
         x, y, z = getPosition(p.i, p.j)
@@ -88,11 +92,26 @@ function coordinatesToPosition(x, y, z)
     return math.ceil((z + 7) / 2 - 0.5) .. " " .. math.ceil((x + 7) / 2 - 0.5)
 end
 
+-- Get a piece by its position on the board
+function getPieceByPos(pi, pj)
+    for i, p in ipairs(chess) do
+        if (p.alive and p.i == pi and p.j == pj) then
+            return p
+        end
+    end
+    return nil
+end
+
 -- Create animation for piece moving
 function movePiece(si, sj, di, dj)
     if (moveAnim == nil) then else return end
     for i, p in ipairs(chess) do
-        if (p.i == si and p.j == sj) then
+        if (p.alive and p.i == si and p.j == sj) then
+            other = getPieceByPos(di, dj)
+            if (other == nil) then
+            else
+                killPiece(other)
+            end
             sx, sy, sz = GameObject.GetPosition(p.pointer)
             dx, dy, dz = getPosition(di, dj)
             moveAnim = {
@@ -106,6 +125,20 @@ function movePiece(si, sj, di, dj)
             break
         end
     end
+end
+
+-- Kill a piece
+function killPiece(piece)
+    piece.alive = false
+    count = #(killedPieces[piece.team])
+    killedPieces[piece.team][count + 1] = piece
+    x, y, z = 0, 0, 0
+    if (piece.team == 0) then
+        x, y, z = getPosition(9 + math.floor(count / 8), count % 8)
+    else
+        x, y, z = getPosition(-math.floor(count / 8) - 2, 7 - (count % 8))
+    end
+    GameObject.SetPosition(piece.pointer, x, y - 0.5, z)
 end
 
 -- Get the team and position of a piece

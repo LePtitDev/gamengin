@@ -17,9 +17,9 @@ function mousePress(button, x, y)
         if (hits[1] == nil) then
         else
             details = { split(Script.CallFunction(chessboard, "getPieceDetails", hits[1])) }
-            if (details[1] == "0") then
+            --if (details[1] == "0") then
                 selected = { piece = hits[1], i = tonumber(details[2]), j = tonumber(details[3]), type = details[4] }
-            end
+            --end
         end
     end
 end
