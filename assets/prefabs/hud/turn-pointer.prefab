@@ -1,0 +1,10 @@
+GameObject.SetName(this, "TurnPointer")
+GameObject.SetPosition(this, 10, -0.2, 0)
+
+geometry = GameObject.AddComponent(this, "Geometry")
+Geometry.Assign(geometry, "geometry:plane")
+
+material = GameObject.AddComponent(this, "Material")
+Material.Assign(material, "texture:cursor")
+
+GameObject.AddComponent(this, "script:turn-pointer")

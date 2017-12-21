@@ -1,6 +1,9 @@
 -- Chessboard informations
 chessboard = nil
 
+-- Team turn
+teamTurn = 0
+
 -- Init game
 function start()
     chessboard = {}
@@ -30,6 +33,7 @@ function start()
     chessboard[7][5] = { team=1, piece="Bishop" }
     chessboard[7][6] = { team=1, piece="Knight" }
     chessboard[7][7] = { team=1, piece="Rook" }
+    teamTurn = 0
 end
 
 -- Restart the game
@@ -37,6 +41,7 @@ function restart()
     start()
     Script.CallFunction(GameObject.GetComponent(GameObject.Find("Chessboard"), "script:chessboard"), "restart")
     Script.CallFunction(GameObject.GetComponent(GameObject.Find("Timer"), "script:timer"), "start")
+    Script.CallFunction(GameObject.GetComponent(GameObject.Find("TurnPointer"), "script:turn-pointer"), "start")
 end
 
 -- Get square state
@@ -53,4 +58,6 @@ function setState(si, sj, di, dj)
     chessboard[di][dj] = chessboard[si][sj]
     chessboard[si][sj] = nil
     Script.CallFunction(GameObject.GetComponent(GameObject.Find("Chessboard"), "script:chessboard"), "movePiece", si, sj, di, dj)
+    teamTurn = (teamTurn + 1) % 2
+    Script.CallFunction(GameObject.GetComponent(GameObject.Find("TurnPointer"), "script:turn-pointer"), "switch")
 end

@@ -15,12 +15,14 @@ LoadAsset("texture:6", "assets/materials/6.png")
 LoadAsset("texture:7", "assets/materials/7.png")
 LoadAsset("texture:8", "assets/materials/8.png")
 LoadAsset("texture:9", "assets/materials/9.png")
+LoadAsset("texture:cursor", "assets/materials/cursor.png")
 
 LoadAsset("script:gamestate", "assets/scripts/gamestate.lua")
 LoadAsset("script:chessboard", "assets/scripts/chessboard.lua")
 LoadAsset("script:piecemoving", "assets/scripts/piecemoving.lua")
 LoadAsset("script:restart", "assets/scripts/restart.lua")
 LoadAsset("script:timer", "assets/scripts/timer.lua")
+LoadAsset("script:turn-pointer", "assets/scripts/turn-pointer.lua")
 
 -- Chargement des prefabs
 LoadPrefab("prefab:camera", "assets/prefabs/camera.prefab")
@@ -49,6 +51,7 @@ LoadPrefab("prefab:king-black", "assets/prefabs/teams/king-black.prefab")
 LoadPrefab("prefab:gamestate", "assets/prefabs/gamestate.prefab")
 LoadPrefab("prefab:hud-restart", "assets/prefabs/hud/restart.prefab")
 LoadPrefab("prefab:hud-timer", "assets/prefabs/hud/timer.prefab")
+LoadPrefab("prefab:turn-pointer", "assets/prefabs/hud/turn-pointer.prefab")
 
 -- Contenu de la scene
 GameObject.Instanciate("prefab:camera")
@@ -56,3 +59,4 @@ GameObject.Instanciate("prefab:gamestate")
 GameObject.Instanciate("prefab:chessboard")
 GameObject.Instanciate("prefab:hud-restart")
 GameObject.Instanciate("prefab:hud-timer")
+GameObject.Instanciate("prefab:turn-pointer")
