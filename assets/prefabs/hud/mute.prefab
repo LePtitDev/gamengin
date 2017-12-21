@@ -1,0 +1,20 @@
+mute = {}
+
+GameObject.SetName(this, "MuteButton")
+GameObject.SetScale(this, 0.008, 0.004, 1.0)
+
+mute['collider'] = GameObject.AddComponent(this, "BoxCollider")
+BoxCollider.SetSize(mute['collider'], 0.03, 0.01, 0.00001)
+
+mute['geometry'] = GameObject.AddComponent(this, "Geometry")
+Geometry.Assign(mute['geometry'], "geometry:ui-plane")
+
+mute['material'] = GameObject.AddComponent(this, "Material")
+Material.Assign(mute['material'], "texture:sound")
+
+mute['uipanel'] = GameObject.AddComponent(this, "UIPanel")
+UIPanel.SetPosition(mute['uipanel'], 600, 100)
+
+mute['facing-controller'] = GameObject.AddComponent(this, "CameraFacingController")
+
+GameObject.AddComponent(this, "script:mute")
