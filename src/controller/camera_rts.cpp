@@ -6,7 +6,7 @@
 CameraRTSController::CameraRTSController(GameObject *parent) :
     Component(parent),
     wheelDelta(0),
-    distance(10.0f),
+    distance(30.0f),
     translationSpeed(0.05f),
     rotationSpeed(15.0f),
     zoomSpeed(0.1f),
@@ -25,7 +25,7 @@ void CameraRTSController::update() {
     }
     float elapsed = (float)timer.elapsed() / 1000.0;
     for (size_t i = 0, sz = mousePressed.size(); i < sz; i++) {
-        if (mousePressed[i] == Qt::LeftButton)
+        if (mousePressed[i] == Qt::RightButton)
             rotation -= (float)mouseMove.x() * rotationSpeed * elapsed;
     }
     if (wheelDelta != 0) {

@@ -3,7 +3,8 @@
 #include "../assets/assets.h"
 
 ScriptComponent::ScriptComponent(GameObject *parent) :
-    Component(parent)
+    Component(parent),
+    started(false)
 {
     script.loadLibScript();
 }
@@ -27,6 +28,9 @@ bool ScriptComponent::assign(const char * name) {
 }
 
 void ScriptComponent::update() {
+    if (!started && script.getVariable("start").type == LuaScript::VariableType::FUNCTION)
+        script.callFunction("start", 0, 0);
+    started = true;
     if (script.getVariable("update").type == LuaScript::VariableType::FUNCTION)
         script.callFunction("update", 0, 0);
 }

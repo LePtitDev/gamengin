@@ -86,6 +86,9 @@ void LuaScript::pushVariable(const Variable &var) {
     case STRING:
         lua_pushstring((lua_State *)state, var.v_string.c_str());
         break;
+    case TABLE:
+        lua_pushstring((lua_State *)state, "array");
+        break;
     case POINTER:
         lua_pushlightuserdata((lua_State *)state, var.v_pointer);
         break;
@@ -103,18 +106,20 @@ void LuaScript::createFunction(const char *name, int (*value)(void *)) {
     lua_register((lua_State *)state, name, (int(*)(lua_State *))value);
 }
 
-LuaScript::Variable LuaScript::callFunction(const char *name, Variable *args, int count) {
-    Variable result;
+std::vector<LuaScript::Variable> LuaScript::callFunction(const char *name, Variable *args, int count) {
+    std::vector<LuaScript::Variable> result;
     lua_getglobal((lua_State *)state, name);
     if (!lua_isfunction((lua_State *)state, -1)) {
         lua_pop((lua_State *)state, 1);
-        result.type = VariableType::UNKNOW;
         return result;
     }
     else {
         for (int i = 0; i < count; i++)
             pushVariable(args[i]);
-        lua_call((lua_State *)state, count, 1);
-        return getVariable(-1);
+        lua_pcall((lua_State *)state, count, LUA_MULTRET, 0);
+        int rcount = lua_gettop((lua_State *)state);
+        for (int i = 0; i < rcount; i++)
+            result.push_back(getVariable(i + 1));
+        return result;
     }
 }

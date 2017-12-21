@@ -147,7 +147,7 @@ void GLWidget::paintGL() {
     program.setUniformValue("texture", 0);
 
     // Assigne la position de la lumière et  sa couleur
-    program.setUniformValue("v_lightpos", QVector3D(0.0f, 2.0f, -1.0f));
+    program.setUniformValue("v_lightpos", QVector3D(0.0f, 5.0f, 0.0f));
     program.setUniformValue("v_lightcolor", QVector3D(1.0f, 1.0f, 1.0f));
 
     Scene::main->paintGL(&program);

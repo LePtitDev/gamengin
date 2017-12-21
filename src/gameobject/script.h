@@ -11,6 +11,9 @@ class ScriptComponent : public Component {
     // LUA Script name
     std::string scriptName;
 
+    // Indicate if script was started
+    bool started;
+
 public:
 
     // LUA Script

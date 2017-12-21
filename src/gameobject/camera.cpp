@@ -9,7 +9,7 @@ Camera::Camera(GameObject *parent) :
     perspective(true),
     fov(45.0f),
     zNear(0.1f),
-    zFar(30.0f),
+    zFar(50.0f),
     aspect(16.0f / 9.0f)
 {
     if (mainCamera != 0) {

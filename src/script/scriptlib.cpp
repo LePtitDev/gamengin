@@ -15,9 +15,11 @@
 #include "../geometry/mesh.h"
 
 #include <sstream>
+#include <QTime>
 
 namespace LuaLib {
 
+/// Print variables
 int Print(void * state) {
     lua_State * L = (lua_State *)state;
     int argc = lua_gettop(L);
@@ -34,7 +36,7 @@ int Print(void * state) {
                 ss << (float)lua_tonumber((lua_State *)state, i);
                 break;
             case LUA_TSTRING:
-                ss << lua_tostring((lua_State *)state, i);
+                ss << "\"" << lua_tostring((lua_State *)state, i) << "\"";
                 break;
             case LUA_TTABLE:
                 ss << "array";
@@ -53,6 +55,33 @@ int Print(void * state) {
     }
     qInfo() << ss.str().c_str();
     return 0;
+}
+
+/// Split a string
+int Split(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushnil(L);
+        return 1;
+    }
+    std::string str = lua_tostring(L, 1);
+    char sep = ' ';
+    if (argc > 1)
+        sep = lua_tostring(L, 2)[0];
+    std::string elem;
+    int k = 0;
+    for (unsigned int i = 0, sz = str.size(); i < sz; i++) {
+        if (str[i] != sep)
+            elem += str[i];
+        else {
+            k++;
+            lua_pushstring(L, elem.c_str());
+            elem.clear();
+        }
+    }
+    lua_pushstring(L, elem.c_str());
+    return k + 1;
 }
 
 /// Get a prefab by name
@@ -78,6 +107,12 @@ int GetPrefab(void * state) {
         lua_pushlightuserdata(L, (void *)prefab);
     else
         lua_pushnil(L);
+    return 1;
+}
+
+/// Get time in seconds
+int GetTime(void * state) {
+    lua_pushnumber((lua_State *)state, (float)Scene::startedTime.msecsTo(QTime::currentTime()) * 0.001f);
     return 1;
 }
 
@@ -266,6 +301,27 @@ int GameObject_Copy(void * state) {
     GameObject * gm_dest = (GameObject *)lua_topointer(L, 2);
     gm_dest->clone(gm_src);
     lua_pushboolean(L, 1);
+    return 1;
+}
+
+/// Find a gameobject on scene root
+///
+/// Parameters :
+/// - gameobject name
+///
+/// Return gameobject pointer if success and nil otherwise
+int GameObject_Find(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushnil(L);
+        return 1;
+    }
+    GameObject * gm = Scene::main->findGameObject(lua_tostring(L, 1));
+    if (gm == 0)
+        lua_pushnil(L);
+    else
+        lua_pushlightuserdata(L, (void *)gm);
     return 1;
 }
 
@@ -1041,8 +1097,10 @@ int Script_CallFunction(void * state) {
     std::vector<LuaScript::Variable> args;
     for (int i = 0, sz = argc - 2; i < sz; i++)
         args.push_back(lscpt_dest.getVariable(i + 3));
-    lscpt_dest.pushVariable(scpt->script.callFunction(lua_tostring(L, 2), args.data(), argc - 2));
-    return 1;
+    std::vector<LuaScript::Variable> results = scpt->script.callFunction(lua_tostring(L, 2), args.data(), argc - 2);
+    for (int i = 0; i < results.size(); i++)
+        lscpt_dest.pushVariable(results[i]);
+    return results.size();
 }
 
 ////////////////////
@@ -1059,7 +1117,7 @@ int Script_CallFunction(void * state) {
 /// - dir_y coordinate
 /// - dir_z coordinate
 ///
-/// Return collider, x, y, z if success and nil otherwise
+/// Return (collider, x, y, z) * NB_COLLIDED if success and nil otherwise
 int Physics_Raycast(void * state) {
     lua_State * L = (lua_State *)state;
     int argc = lua_gettop(L);
@@ -1071,16 +1129,14 @@ int Physics_Raycast(void * state) {
             QVector3D(lua_tonumber(L, 4), lua_tonumber(L, 5), lua_tonumber(L, 6)));
     ray.direction.normalize();
     std::vector<std::pair<Collider *, float>> res = Collider::Raycast(ray);
-    if (res.size() == 0) {
-        lua_pushnil(L);
-        return 1;
+    for (unsigned int i = 0; i < res.size(); i++) {
+        lua_pushlightuserdata(L, (void *)&res[i].first->gameObject());
+        QVector3D point = ray.origin + ray.direction * res[i].second;
+        lua_pushnumber(L, point.x());
+        lua_pushnumber(L, point.y());
+        lua_pushnumber(L, point.z());
     }
-    lua_pushlightuserdata(L, (void *)res[0].first);
-    QVector3D point = ray.origin + ray.direction * res[0].second;
-    lua_pushnumber(L, point.x());
-    lua_pushnumber(L, point.y());
-    lua_pushnumber(L, point.z());
-    return 4;
+    return (int)(res.size() * 4);
 }
 
 }
@@ -1090,8 +1146,12 @@ void LuaScript::loadLibScript() {
 
     lua_pushcfunction(L, (lua_CFunction)LuaLib::Print);
     lua_setglobal(L, "print");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Split);
+    lua_setglobal(L, "split");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GetPrefab);
     lua_setglobal(L, "GetPrefab");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::GetTime);
+    lua_setglobal(L, "GetTime");
 
     /// GAMEOBJECT ///
 
@@ -1105,6 +1165,8 @@ void LuaScript::loadLibScript() {
     lua_setfield(L, id, "Instanciate");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_Copy);
     lua_setfield(L, id, "Copy");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_Find);
+    lua_setfield(L, id, "Find");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_AddChild);
     lua_setfield(L, id, "AddChild");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetChild);

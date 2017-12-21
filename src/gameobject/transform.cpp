@@ -11,14 +11,18 @@ Transform::Transform(GameObject *parent) :
 QVector3D Transform::position() const {
     GameObject * parent = gameObject().getParent();
     if (parent != 0)
-        return localPosition + parent->transform().position();
+        return parent->transform().rotation() * localPosition + parent->transform().position();
     return localPosition;
 }
 
 QQuaternion Transform::rotation() const {
     GameObject * parent = gameObject().getParent();
-    if (parent != 0)
-        return localRotation + parent->transform().rotation();
+    if (parent != 0) {
+        float sx, sy, sz; localRotation.getEulerAngles(&sx, &sy, &sz);
+        QQuaternion rt = parent->transform().rotation();
+        float rx, ry, rz; rt.getEulerAngles(&rx, &ry, &rz);
+        return QQuaternion::fromEulerAngles(sx + rx, sy + ry, sz + rz);
+    }
     return localRotation;
 }
 
@@ -39,8 +43,12 @@ void Transform::setPosition(const QVector3D& pos) {
 
 void Transform::setRotation(const QQuaternion& rot) {
     GameObject * parent = gameObject().getParent();
-    if (parent != 0)
-        localRotation = rot - parent->transform().rotation();
+    if (parent != 0) {
+        float sx, sy, sz; rot.getEulerAngles(&sx, &sy, &sz);
+        QQuaternion rt = parent->transform().rotation();
+        float rx, ry, rz; rt.getEulerAngles(&rx, &ry, &rz);
+        localRotation = QQuaternion::fromEulerAngles(sx - rx, sy - ry, sz - rz);
+    }
     else
         localRotation = rot;
 }

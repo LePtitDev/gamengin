@@ -1,6 +1,10 @@
 rook = {}
 GameObject.SetName(this, "Rook")
 
+collider = GameObject.AddComponent(this, "BoxCollider")
+BoxCollider.SetOffset(collider, 0, 1, 0)
+BoxCollider.SetSize(collider, 1, 2, 1)
+
 -- BODY CHILD --
 
 body = {}

@@ -2,6 +2,7 @@
 #define LUA_H
 
 #include <string>
+#include <vector>
 
 class LuaScript {
 
@@ -77,7 +78,7 @@ public:
     void createFunction(const char * name, int (*value)(void * state));
 
     // Call a LUA function
-    Variable callFunction(const char * name, Variable * args, int count);
+    std::vector<Variable> callFunction(const char * name, Variable * args, int count);
 
     // Load main game script lib
     void loadLibGame();

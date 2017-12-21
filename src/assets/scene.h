@@ -7,6 +7,7 @@
 #include "../geometry/shapes.h"
 
 #include <vector>
+#include <QTime>
 #include <QOpenGLShaderProgram>
 
 class Scene {
@@ -15,6 +16,9 @@ public:
 
     // Main scene
     static Scene * main;
+
+    // Started time
+    static QTime startedTime;
 
 private:
 
@@ -82,8 +86,8 @@ public:
 
     // Update gameobjects
     void update() {
-        for (auto gm : objects)
-            gm->update();
+        for (unsigned int i = 0, sz = objects.size(); i < sz; i++)
+            objects[i]->update();
     }
 
     // Event callback

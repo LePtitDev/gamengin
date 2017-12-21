@@ -11,6 +11,7 @@
 Scene * Scene::main;
 int Scene::width;
 int Scene::height;
+QTime Scene::startedTime(QTime::currentTime());
 
 Asset * Asset::Load(const char * name, const char * filename) {
     int len = (int)std::strlen(filename);

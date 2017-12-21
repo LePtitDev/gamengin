@@ -1,6 +1,10 @@
 square = {}
 GameObject.SetName(this, "Chessboard")
 
+collider = GameObject.AddComponent(this, "BoxCollider")
+BoxCollider.SetOffset(collider, 0, -0.3, 0)
+BoxCollider.SetSize(collider, 16, 0.4, 16)
+
 -- SQUARES --
 
 squares = {}
@@ -23,3 +27,4 @@ end
 -- SCRIPTS --
 
 GameObject.AddComponent(this, "script:chessboard")
+GameObject.AddComponent(this, "script:piecemoving")

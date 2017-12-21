@@ -1,7 +1,9 @@
-chessboard = {}
+-- Chessboard informations
+chessboard = nil
 
 -- Init game
 function start()
+    chessboard = {}
     for i = 0, 7 do
         chessboard[i] = {}
         for j = 0, 7 do
@@ -35,7 +37,7 @@ function getState(i, j)
     if (chessboard[i][j] == nil) then
         return ""
     else
-        return "" + chessboard[i][j].team + " " + chessboard[i][j].piece
+        return chessboard[i][j].team .. " " .. chessboard[i][j].piece
     end
 end
 
@@ -43,4 +45,5 @@ end
 function setState(si, sj, di, dj)
     chessboard[di][dj] = chessboard[si][sj]
     chessboard[si][sj] = nil
+    Script.CallFunction(GameObject.GetComponent(GameObject.Find("Chessboard"), "script:chessboard"), "movePiece", si, sj, di, dj)
 end

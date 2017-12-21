@@ -5,6 +5,7 @@ LoadAsset("texture:black", "assets/materials/black.png")
 
 LoadAsset("script:gamestate", "assets/scripts/gamestate.lua")
 LoadAsset("script:chessboard", "assets/scripts/chessboard.lua")
+LoadAsset("script:piecemoving", "assets/scripts/piecemoving.lua")
 
 -- Chargement des prefabs
 LoadPrefab("prefab:camera", "assets/prefabs/camera.prefab")
