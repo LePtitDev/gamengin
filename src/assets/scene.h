@@ -86,7 +86,7 @@ public:
 
     // Update gameobjects
     void update() {
-        for (unsigned int i = 0, sz = objects.size(); i < sz; i++)
+        for (unsigned int i = 0, sz = (unsigned int)objects.size(); i < sz; i++)
             objects[i]->update();
     }
 

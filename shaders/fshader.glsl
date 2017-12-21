@@ -18,6 +18,9 @@ uniform vec3 v_lightpos;
 // Couleur de la lumière
 uniform vec3 v_lightcolor;
 
+// Indique si la lumière est activée
+uniform bool b_light;
+
 // Coordonnées du fragment
 varying vec3 v_position;
 
@@ -38,19 +41,27 @@ float Ks = 0.8;
 
 // Fonction d'entrée
 void main() {
-	// Ambient
-    vec3 ambient = Ka * v_lightcolor;
+	if (b_light) {
 	
-	// Diffuse
-	vec3 light_dir = normalize(v_lightpos - v_position);
-    vec3 diffuse = Kd * max(dot(v_normal, light_dir), 0.0) * v_lightcolor;
-    
-    // Specular
-	vec3 view_dir = normalize(v_camerapos - v_position);
-    vec3 reflect_dir = reflect(-light_dir, v_normal); 
-    float spec = pow(max(dot(view_dir, reflect_dir), 0.0), 32.0);
-    vec3 specular = Ks * spec * v_lightcolor;
+		// Ambient
+		vec3 ambient = Ka * v_lightcolor;
+		
+		// Diffuse
+		vec3 light_dir = normalize(v_lightpos - v_position);
+		vec3 diffuse = Kd * max(dot(v_normal, light_dir), 0.0) * v_lightcolor;
+		
+		// Specular
+		vec3 view_dir = normalize(v_camerapos - v_position);
+		vec3 reflect_dir = reflect(-light_dir, v_normal); 
+		float spec = pow(max(dot(view_dir, reflect_dir), 0.0), 32.0);
+		vec3 specular = Ks * spec * v_lightcolor;
 
-	// Assigne la couleur du fragment par rapport à la texture
-    gl_FragColor = vec4(ambient + diffuse + specular, 1.0) * texture2D(texture, v_texcoord);
+		// Assigne la couleur du fragment par rapport à la texture
+		gl_FragColor = vec4(ambient + diffuse + specular, 1.0) * texture2D(texture, v_texcoord);
+	}
+	else {
+	
+		// Assigne la couleur sans lumière
+		gl_FragColor = texture2D(texture, v_texcoord);
+	}
 }

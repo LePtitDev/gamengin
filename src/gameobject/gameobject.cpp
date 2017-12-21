@@ -1,6 +1,7 @@
 #include "gameobject.h"
 #include "geometry.h"
 #include "material.h"
+#include "uipanel.h"
 
 GameObject::GameObject() :
     name("GameObject"),
@@ -229,7 +230,13 @@ void GameObject::paintGL(QOpenGLShaderProgram *program) {
         matrix.scale(transform->scale());
         program->setUniformValue("m_model", matrix);
 
-        geometry->draw(program);
+        if (getComponent<UIPanel>() == 0)
+            geometry->draw(program);
+        else {
+            program->setUniformValue("b_light", false);
+            geometry->draw(program);
+            program->setUniformValue("b_light", true);
+        }
     }
     for (size_t i = 0, sz = children.size(); i < sz; i++)
         children[i]->paintGL(program);

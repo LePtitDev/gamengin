@@ -13,6 +13,7 @@
 #include "../controller/camera_rts.h"
 #include "../controller/camera_facing.h"
 #include "../geometry/mesh.h"
+#include "../gameobject/uipanel.h"
 
 #include <sstream>
 #include <QTime>
@@ -71,7 +72,7 @@ int Split(void * state) {
         sep = lua_tostring(L, 2)[0];
     std::string elem;
     int k = 0;
-    for (unsigned int i = 0, sz = str.size(); i < sz; i++) {
+    for (unsigned int i = 0, sz = (unsigned int)str.size(); i < sz; i++) {
         if (str[i] != sep)
             elem += str[i];
         else {
@@ -165,6 +166,8 @@ int GameObject_AddComponent(void * state) {
         result = (void *)gm->addComponent<BoxCollider>();
     else if (comp == "ParticleSystem")
         result = (void *)gm->addComponent<ParticleSystem>();
+    else if (comp == "UIPanel")
+        result = (void *)gm->addComponent<UIPanel>();
     else if (comp == "Script")
         result = (void *)gm->addComponent<ScriptComponent>();
     else {
@@ -231,6 +234,8 @@ int GameObject_GetComponent(void * state) {
         result = (void *)gm->getComponent<BoxCollider>();
     else if (comp == "ParticleSystem")
         result = (void *)gm->getComponent<ParticleSystem>();
+    else if (comp == "UIPanel")
+        result = (void *)gm->getComponent<UIPanel>();
     else if (comp == "Script")
         result = (void *)gm->getComponent<ScriptComponent>();
     else {
@@ -1100,7 +1105,33 @@ int Script_CallFunction(void * state) {
     std::vector<LuaScript::Variable> results = scpt->script.callFunction(lua_tostring(L, 2), args.data(), argc - 2);
     for (int i = 0; i < results.size(); i++)
         lscpt_dest.pushVariable(results[i]);
-    return results.size();
+    return (int)results.size();
+}
+
+////////////////////
+////// UIPANEL //////
+////////////////////
+
+/// Set UIPanel position
+///
+/// Parameters :
+/// - ui panel pointer
+/// - x coordinate
+/// - y coordinate
+///
+/// Return true if success and false otherwise
+int UIPanel_SetPosition(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 3) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    UIPanel * panel = (UIPanel *)lua_topointer(L, 1);
+    panel->position.setX(lua_tonumber(L, 2));
+    panel->position.setY(lua_tonumber(L, 3));
+    lua_pushboolean(L, 1);
+    return 1;
 }
 
 ////////////////////
@@ -1284,4 +1315,12 @@ void LuaScript::loadLibScript() {
     lua_pushcfunction(L, (lua_CFunction)LuaLib::Physics_Raycast);
     lua_setfield(L, id, "Raycast");
     lua_setglobal(L, "Physics");
+
+    /// UIPANEL ///
+
+    lua_createtable(L, 0, 0);
+    id = lua_gettop(L);
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::UIPanel_SetPosition);
+    lua_setfield(L, id, "SetPosition");
+    lua_setglobal(L, "UIPanel");
 }

@@ -26,6 +26,9 @@ GLWidget::GLWidget(QWidget *parent) :
 
     // Active la récupération des événements clavier
     grabKeyboard();
+
+    // Activer le tracking de la souris de base
+    setMouseTracking(true);
 }
 
 GLWidget::~GLWidget() {
@@ -149,6 +152,9 @@ void GLWidget::paintGL() {
     // Assigne la position de la lumière et  sa couleur
     program.setUniformValue("v_lightpos", QVector3D(0.0f, 5.0f, 0.0f));
     program.setUniformValue("v_lightcolor", QVector3D(1.0f, 1.0f, 1.0f));
+
+    // Active la lumière par défaut
+    program.setUniformValue("b_light", true);
 
     Scene::main->paintGL(&program);
 }

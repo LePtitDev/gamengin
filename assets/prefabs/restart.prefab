@@ -1,0 +1,19 @@
+restart = {}
+GameObject.SetName(this, "RestartButton")
+GameObject.SetScale(this, 0.015, 0.004, 1.0)
+
+restart['collider'] = GameObject.AddComponent(this, "BoxCollider")
+BoxCollider.SetSize(restart['collider'], 0.03, 0.01, 0.00001)
+
+restart['geometry'] = GameObject.AddComponent(this, "Geometry")
+Geometry.Assign(restart['geometry'], "geometry:ui-plane")
+
+restart['material'] = GameObject.AddComponent(this, "Material")
+Material.Assign(restart['material'], "texture:restart")
+
+restart['uipanel'] = GameObject.AddComponent(this, "UIPanel")
+UIPanel.SetPosition(restart['uipanel'], 0, 100)
+
+restart['facing-controller'] = GameObject.AddComponent(this, "CameraFacingController")
+
+GameObject.AddComponent(this, "script:restart")

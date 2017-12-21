@@ -81,7 +81,8 @@ SOURCES += \
     src/script/scenelib.cpp \
     src/script/scriptlib.cpp \
     src/colliders/boxcollider.cpp \
-    src/gameobject/collider.cpp
+    src/gameobject/collider.cpp \
+    src/gameobject/uipanel.cpp
 
 
 HEADERS += \
@@ -134,7 +135,8 @@ HEADERS += \
     src/geometry/bounds.h \
     src/geometry/ray.h \
     src/colliders/boxcollider.h \
-    src/geometry/triangle.h
+    src/geometry/triangle.h \
+    src/gameobject/uipanel.h
 
 FORMS += \
 	mainwindow.ui

@@ -2,10 +2,13 @@ LoadAsset("texture:square-dark", "assets/materials/square-dark.png")
 LoadAsset("texture:square-light", "assets/materials/square-light.png")
 LoadAsset("texture:white", "assets/materials/white.png")
 LoadAsset("texture:black", "assets/materials/black.png")
+LoadAsset("texture:restart", "assets/materials/restart.png")
+LoadAsset("texture:restart-outline", "assets/materials/restart-outline.png")
 
 LoadAsset("script:gamestate", "assets/scripts/gamestate.lua")
 LoadAsset("script:chessboard", "assets/scripts/chessboard.lua")
 LoadAsset("script:piecemoving", "assets/scripts/piecemoving.lua")
+LoadAsset("script:restart", "assets/scripts/restart.lua")
 
 -- Chargement des prefabs
 LoadPrefab("prefab:camera", "assets/prefabs/camera.prefab")
@@ -32,8 +35,10 @@ LoadPrefab("prefab:queen-black", "assets/prefabs/teams/queen-black.prefab")
 LoadPrefab("prefab:king-black", "assets/prefabs/teams/king-black.prefab")
 
 LoadPrefab("prefab:gamestate", "assets/prefabs/gamestate.prefab")
+LoadPrefab("prefab:hud-restart", "assets/prefabs/restart.prefab")
 
 -- Contenu de la scene
 GameObject.Instanciate("prefab:camera")
 GameObject.Instanciate("prefab:gamestate")
 GameObject.Instanciate("prefab:chessboard")
+GameObject.Instanciate("prefab:hud-restart")

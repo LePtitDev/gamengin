@@ -32,6 +32,12 @@ function start()
     chessboard[7][7] = { team=1, piece="Rook" }
 end
 
+-- Restart the game
+function restart()
+    start()
+    Script.CallFunction(GameObject.GetComponent(GameObject.Find("Chessboard"), "script:chessboard"), "restart")
+end
+
 -- Get square state
 function getState(i, j)
     if (chessboard[i][j] == nil) then

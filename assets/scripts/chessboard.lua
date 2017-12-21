@@ -57,6 +57,26 @@ function start()
     end
 end
 
+-- Restart the game
+function restart()
+    for i = 1, 8 do
+        chess[i].i = 0
+        chess[i].j = i - 1
+        chess[8 + i].i = 1
+        chess[8 + i].j = i - 1
+        chess[16 + i].i = 6
+        chess[16 + i].j = i - 1
+        chess[24 + i].i = 7
+        chess[24 + i].j = i - 1
+    end
+    killedPieces = {[0] = {}, [1] = {}}
+    for i, p in ipairs(chess) do
+        p.alive = true
+        x, y, z = getPosition(p.i, p.j)
+        GameObject.SetPosition(p.pointer, x, y, z)
+    end
+end
+
 -- Update callback
 function update()
     currentTime = GetTime()
