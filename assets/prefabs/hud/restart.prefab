@@ -12,7 +12,7 @@ restart['material'] = GameObject.AddComponent(this, "Material")
 Material.Assign(restart['material'], "texture:restart")
 
 restart['uipanel'] = GameObject.AddComponent(this, "UIPanel")
-UIPanel.SetPosition(restart['uipanel'], 0, 100)
+UIPanel.SetPosition(restart['uipanel'], 0, 75)
 
 restart['facing-controller'] = GameObject.AddComponent(this, "CameraFacingController")
 

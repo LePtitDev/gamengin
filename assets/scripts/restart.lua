@@ -1,3 +1,4 @@
+-- Indicate if button is outlined
 outlined = false
 
 -- Mouse press callback

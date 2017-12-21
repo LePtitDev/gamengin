@@ -36,6 +36,7 @@ end
 function restart()
     start()
     Script.CallFunction(GameObject.GetComponent(GameObject.Find("Chessboard"), "script:chessboard"), "restart")
+    Script.CallFunction(GameObject.GetComponent(GameObject.Find("Timer"), "script:timer"), "start")
 end
 
 -- Get square state

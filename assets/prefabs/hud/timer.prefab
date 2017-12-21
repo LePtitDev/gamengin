@@ -1,0 +1,37 @@
+GameObject.SetName(this, "Timer")
+
+child = {}
+for i = 0, 4 do
+    child[i] = {}
+    child[i]['prefab'] = GameObject.AddChild(this, "Char")
+    GameObject.SetScale(child[i]['prefab'], 0.002, 0.004, 1.0)
+
+    child[i]['geometry'] = GameObject.AddComponent(child[i]['prefab'], "Geometry")
+    Geometry.Assign(child[i]['geometry'], "geometry:ui-plane")
+
+    child[i]['material'] = GameObject.AddComponent(child[i]['prefab'], "Material")
+    child[i]['uipanel'] = GameObject.AddComponent(child[i]['prefab'], "UIPanel")
+    child[i]['facing-controller'] = GameObject.AddComponent(child[i]['prefab'], "CameraFacingController")
+end
+
+GameObject.SetName(child[0]['prefab'], "DMin")
+UIPanel.SetPosition(child[0]['uipanel'], -100, 150)
+Material.Assign(child[0]['material'], "texture:0")
+
+GameObject.SetName(child[1]['prefab'], "Min")
+UIPanel.SetPosition(child[1]['uipanel'], -50, 150)
+Material.Assign(child[1]['material'], "texture:0")
+
+GameObject.SetName(child[2]['prefab'], "Colon")
+UIPanel.SetPosition(child[2]['uipanel'], 0, 150)
+Material.Assign(child[2]['material'], "texture:colon")
+
+GameObject.SetName(child[3]['prefab'], "DSec")
+UIPanel.SetPosition(child[3]['uipanel'], 50, 150)
+Material.Assign(child[3]['material'], "texture:0")
+
+GameObject.SetName(child[4]['prefab'], "Sec")
+UIPanel.SetPosition(child[4]['uipanel'], 100, 150)
+Material.Assign(child[4]['material'], "texture:0")
+
+GameObject.AddComponent(this, "script:timer")
