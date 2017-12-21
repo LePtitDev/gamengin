@@ -51,6 +51,24 @@ const GameObject * GameObject::getChild(const char * n) const {
     return 0;
 }
 
+std::vector<GameObject *> GameObject::getChildren(const char * n) {
+    std::vector<GameObject *> result;
+    for (auto gm : children) {
+        if (gm->name == n)
+            result.push_back(gm);
+    }
+    return result;
+}
+
+std::vector<const GameObject *> GameObject::getChildren(const char * n) const {
+    std::vector<const GameObject *> result;
+    for (auto gm : children) {
+        if (gm->name == n)
+            result.push_back(gm);
+    }
+    return result;
+}
+
 unsigned int GameObject::childrenCount() const {
     return (unsigned int)children.size();
 }
@@ -83,7 +101,6 @@ void GameObject::clone(GameObject * g) {
         children[i]->clone(o);
     }
     g->name = name;
-    g->name += "(Clone)";
 }
 
 void GameObject::update() {

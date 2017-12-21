@@ -1,0 +1,13 @@
+rook = GetPrefab("prefab:rook")
+GameObject.Copy(this, rook)
+
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Body"), "Material"), "texture:black")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Base"), "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Head"), "Material"), "texture:black")
+
+batts = {}
+batts[0], batts[1], batts[2], batts[3] = GameObject.GetChildren(this, "Battlement")
+Material.Assign(GameObject.GetComponent(batts[0], "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(batts[1], "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(batts[2], "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(batts[3], "Material"), "texture:white")

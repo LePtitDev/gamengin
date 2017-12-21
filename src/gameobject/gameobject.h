@@ -113,6 +113,12 @@ public:
     // Get a child
     const GameObject * getChild(const char * n) const;
 
+    // Get a children
+    std::vector<GameObject *> getChildren(const char * n);
+
+    // Get a children
+    std::vector<const GameObject *> getChildren(const char * n) const;
+
     // Get children count
     unsigned int childrenCount() const;
 

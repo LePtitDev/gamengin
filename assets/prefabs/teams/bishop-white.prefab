@@ -1,0 +1,8 @@
+bishop = GetPrefab("prefab:bishop")
+GameObject.Copy(this, bishop)
+
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Body"), "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Base"), "Material"), "texture:black")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "HeadBase"), "Material"), "texture:black")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Head"), "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "HeadBall"), "Material"), "texture:black")

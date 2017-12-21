@@ -1,0 +1,6 @@
+pawn = GetPrefab("prefab:pawn")
+GameObject.Copy(this, pawn)
+
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Body"), "Material"), "texture:black")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Base"), "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Head"), "Material"), "texture:black")

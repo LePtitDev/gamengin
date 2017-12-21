@@ -1,0 +1,9 @@
+king = GetPrefab("prefab:king")
+GameObject.Copy(this, king)
+
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Body"), "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Base"), "Material"), "texture:black")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "HeadBase"), "Material"), "texture:black")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Head"), "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "CrossVertical"), "Material"), "texture:black")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "CrossHorizontal"), "Material"), "texture:black")

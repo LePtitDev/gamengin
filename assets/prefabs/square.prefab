@@ -1,0 +1,9 @@
+square = {}
+GameObject.SetName(this, "Square")
+GameObject.SetScale(this, 1, 0.2, 1)
+
+square['geometry'] = GameObject.AddComponent(this, "Geometry")
+Geometry.Assign(square['geometry'], "geometry:cube")
+
+square['material'] = GameObject.AddComponent(this, "Material")
+Material.Assign(square['material'], "texture:default")

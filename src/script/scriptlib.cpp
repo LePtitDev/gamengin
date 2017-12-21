@@ -55,6 +55,32 @@ int Print(void * state) {
     return 0;
 }
 
+/// Get a prefab by name
+///
+/// Parameters :
+/// - prefab asset name
+///
+/// Return prefab pointer if success and nil otherwise
+int GetPrefab(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushnil(L);
+        return 1;
+    }
+    Asset * asset = Asset::Find(lua_tostring(L, 1));
+    if (asset == 0 || asset->getData<GameObject>() == 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+    GameObject * prefab = asset->getData<GameObject>();
+    if (prefab != 0)
+        lua_pushlightuserdata(L, (void *)prefab);
+    else
+        lua_pushnil(L);
+    return 1;
+}
+
 ////////////////////////
 ////// GAMEOBJECT //////
 ////////////////////////
@@ -191,6 +217,7 @@ int GameObject_GetComponent(void * state) {
 ///
 /// Parameters :
 /// - prefab asset name / prefab pointer
+/// - parent gameobject pointer (optional)
 ///
 /// Return gameobject pointer if success and nil otherwise
 int GameObject_Instanciate(void * state) {
@@ -213,8 +240,32 @@ int GameObject_Instanciate(void * state) {
         gm = (GameObject *)lua_topointer(L, 1);
     GameObject * result = new GameObject();
     gm->clone(result);
-    Scene::main->addGameObject(result);
+    if (argc < 2)
+        Scene::main->addGameObject(result);
+    else
+        ((GameObject *)lua_topointer(L, 2))->addChild(result);
     lua_pushlightuserdata(L, (void *)result);
+    return 1;
+}
+
+/// Copy a gameobject
+///
+/// Parameters :
+/// - gameobject pointer to assign
+/// - gameobject pointer to copy
+///
+/// Return true if success and false otherwise
+int GameObject_Copy(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    GameObject * gm_src = (GameObject *)lua_topointer(L, 1);
+    GameObject * gm_dest = (GameObject *)lua_topointer(L, 2);
+    gm_dest->clone(gm_src);
+    lua_pushboolean(L, 1);
     return 1;
 }
 
@@ -273,6 +324,31 @@ int GameObject_GetChild(void * state) {
     GameObject * result = gm->getChild(lua_tostring(L, 2));
     lua_pushlightuserdata(L, (void *)result);
     return 1;
+}
+
+/// Get children in a gameobject
+///
+/// Parameters :
+/// - gameobject pointer
+/// - gameobjects name
+///
+/// Return gameobject children pointers if success and nil otherwise
+int GameObject_GetChildren(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 2) {
+        lua_pushnil(L);
+        return 1;
+    }
+    GameObject * gm = (GameObject *)lua_topointer(L, 1);
+    if (gm == 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+    std::vector<GameObject *> result = gm->getChildren(lua_tostring(L, 2));
+    for (int i = 0; i < result.size(); i++)
+        lua_pushlightuserdata(L, (void *)result[i]);
+    return (int)result.size();
 }
 
 /// Get gameobject name
@@ -1014,6 +1090,8 @@ void LuaScript::loadLibScript() {
 
     lua_pushcfunction(L, (lua_CFunction)LuaLib::Print);
     lua_setglobal(L, "print");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::GetPrefab);
+    lua_setglobal(L, "GetPrefab");
 
     /// GAMEOBJECT ///
 
@@ -1025,10 +1103,14 @@ void LuaScript::loadLibScript() {
     lua_setfield(L, id, "GetComponent");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_Instanciate);
     lua_setfield(L, id, "Instanciate");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_Copy);
+    lua_setfield(L, id, "Copy");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_AddChild);
     lua_setfield(L, id, "AddChild");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetChild);
     lua_setfield(L, id, "GetChild");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetChildren);
+    lua_setfield(L, id, "GetChildren");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_GetName);
     lua_setfield(L, id, "GetName");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_SetName);
@@ -1045,8 +1127,6 @@ void LuaScript::loadLibScript() {
     lua_setfield(L, id, "SetRotation");
     lua_pushcfunction(L, (lua_CFunction)LuaLib::GameObject_SetScale);
     lua_setfield(L, id, "SetScale");
-    // Méthodes de GameObject
-
     lua_setglobal(L, "GameObject");
 
     /// COMPONENT ///

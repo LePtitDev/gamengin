@@ -1,0 +1,8 @@
+queen = GetPrefab("prefab:queen")
+GameObject.Copy(this, queen)
+
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Body"), "Material"), "texture:black")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Base"), "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "HeadBase"), "Material"), "texture:white")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Head"), "Material"), "texture:black")
+Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Ball"), "Material"), "texture:white")

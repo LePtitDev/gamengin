@@ -1,0 +1,21 @@
+square = {}
+GameObject.SetName(this, "Chessboard")
+
+-- SQUARES --
+
+squares = {}
+for i = 0, 7 do
+    squares[i] = {}
+    for j = 0, 7 do
+        squares[i][j] = {}
+        squares[i][j]['prefab'] = GameObject.Instanciate("prefab:square", this)
+        GameObject.SetPosition(squares[i][j]['prefab'], i * 2 - 7, -0.3, j * 2 - 7)
+
+        squares[i][j]['material'] = GameObject.GetComponent(squares[i][j]['prefab'], "Material")
+        if ((i % 2 + j % 2) % 2 == 0) then
+            Material.Assign(squares[i][j]['material'], "texture:square-dark")
+        else
+            Material.Assign(squares[i][j]['material'], "texture:square-light")
+        end
+    end
+end

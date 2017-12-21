@@ -72,7 +72,7 @@ Material.Assign(left_hear['material'], "texture:default")
 -- RIGHT HEAR CHILD --
 
 right_hear = {}
-right_hear['prefab'] = GameObject.AddChild(this, "LeftHear")
+right_hear['prefab'] = GameObject.AddChild(this, "RightHear")
 GameObject.SetPosition(right_hear['prefab'], 0.2, 2.2, 0.35)
 GameObject.SetRotation(right_hear['prefab'], 15, 0, -15)
 GameObject.SetScale(right_hear['prefab'], 0.2, 0.3, 0.2)
