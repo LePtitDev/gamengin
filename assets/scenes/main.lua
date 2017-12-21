@@ -3,6 +3,9 @@ LoadAsset("texture:square-light", "assets/materials/square-light.png")
 LoadAsset("texture:white", "assets/materials/white.png")
 LoadAsset("texture:black", "assets/materials/black.png")
 
+LoadAsset("script:gamestate", "assets/scripts/gamestate.lua")
+LoadAsset("script:chessboard", "assets/scripts/chessboard.lua")
+
 -- Chargement des prefabs
 LoadPrefab("prefab:camera", "assets/prefabs/camera.prefab")
 LoadPrefab("prefab:square", "assets/prefabs/square.prefab")
@@ -27,7 +30,9 @@ LoadPrefab("prefab:bishop-black", "assets/prefabs/teams/bishop-black.prefab")
 LoadPrefab("prefab:queen-black", "assets/prefabs/teams/queen-black.prefab")
 LoadPrefab("prefab:king-black", "assets/prefabs/teams/king-black.prefab")
 
+LoadPrefab("prefab:gamestate", "assets/prefabs/gamestate.prefab")
+
 -- Contenu de la scene
 GameObject.Instanciate("prefab:camera")
+GameObject.Instanciate("prefab:gamestate")
 GameObject.Instanciate("prefab:chessboard")
-GameObject.Instanciate("prefab:rook-black")

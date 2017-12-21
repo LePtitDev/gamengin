@@ -19,3 +19,7 @@ for i = 0, 7 do
         end
     end
 end
+
+-- SCRIPTS --
+
+GameObject.AddComponent(this, "script:chessboard")

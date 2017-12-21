@@ -1,5 +1,6 @@
 knight = GetPrefab("prefab:knight")
 GameObject.Copy(this, knight)
+GameObject.SetRotation(this, 0, 180, 0)
 
 Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Body"), "Material"), "texture:white")
 Material.Assign(GameObject.GetComponent(GameObject.GetChild(this, "Base"), "Material"), "texture:black")

@@ -1,0 +1,2 @@
+GameObject.SetName(this, "GameState")
+GameObject.AddComponent(this, "script:gamestate")
