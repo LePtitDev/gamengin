@@ -102,6 +102,9 @@ public:
     // Load an image
     static Asset * LoadPNG(const char * name, const char * filename);
 
+    // Load a sound
+    static Asset * LoadMP3(const char * name, const char * filename);
+
     // Load a 3D model
     static Asset * LoadPLY(const char * name, const char * filename);
 

@@ -1170,6 +1170,67 @@ int Physics_Raycast(void * state) {
     return (int)(res.size() * 4);
 }
 
+///////////////////
+////// SOUND //////
+///////////////////
+
+/// Play sound
+///
+///  Parameters :
+/// - sound asset name
+/// - volume (optional)
+///
+/// Return true if success and false otherwise
+int Sound_Play(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    Asset * asset = Asset::Find(lua_tostring(L, 1));
+    if (asset == 0 || asset->getData<QUrl>() == 0) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    Scene::player.setMedia(*asset->getData<QUrl>());
+    if (argc > 1)
+        Scene::player.setVolume(lua_tointeger(L, 2));
+    Scene::player.play();
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
+/// Stop sound
+int Sound_Stop(void * state) {
+    Scene::player.stop();
+    return 0;
+}
+
+/// Get volume
+int Sound_GetVolume(void * state) {
+    lua_tonumber((lua_State *)state, Scene::player.volume());
+    return 1;
+}
+
+/// Set volume
+///
+///  Parameter :
+/// - volume
+///
+/// Return true if success and false otherwise
+int Sound_SetVolume(void * state) {
+    lua_State * L = (lua_State *)state;
+    int argc = lua_gettop(L);
+    if (argc < 1) {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    Scene::player.setVolume(lua_tointeger(L, 1));
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
 }
 
 void LuaScript::loadLibScript() {
@@ -1323,4 +1384,18 @@ void LuaScript::loadLibScript() {
     lua_pushcfunction(L, (lua_CFunction)LuaLib::UIPanel_SetPosition);
     lua_setfield(L, id, "SetPosition");
     lua_setglobal(L, "UIPanel");
+
+    /// SOUND ///
+
+    lua_createtable(L, 0, 0);
+    id = lua_gettop(L);
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Sound_Play);
+    lua_setfield(L, id, "Play");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Sound_Stop);
+    lua_setfield(L, id, "Stop");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Sound_GetVolume);
+    lua_setfield(L, id, "GetVolume");
+    lua_pushcfunction(L, (lua_CFunction)LuaLib::Sound_SetVolume);
+    lua_setfield(L, id, "SetVolume");
+    lua_setglobal(L, "Sound");
 }

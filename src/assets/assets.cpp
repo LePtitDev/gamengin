@@ -12,6 +12,7 @@ Scene * Scene::main;
 int Scene::width;
 int Scene::height;
 QTime Scene::startedTime(QTime::currentTime());
+QMediaPlayer Scene::player;
 
 Asset * Asset::Load(const char * name, const char * filename) {
     int len = (int)std::strlen(filename);
@@ -21,6 +22,8 @@ Asset * Asset::Load(const char * name, const char * filename) {
     pos++;
     if (std::strcmp(filename + pos, "png") == 0)
         return LoadPNG(name, filename);
+    if (std::strcmp(filename + pos, "mp3") == 0)
+        return LoadMP3(name, filename);
     if (std::strcmp(filename + pos, "ply") == 0)
         return LoadPLY(name, filename);
     if (std::strcmp(filename + pos, "lua") == 0)
@@ -39,6 +42,17 @@ Asset * Asset::LoadPNG(const char * name, const char *filename)  {
     texture->setMagnificationFilter(QOpenGLTexture::Linear);
     texture->setWrapMode(QOpenGLTexture::Repeat);
     Asset * asset = new Asset(name, (void *)texture);
+    Asset::GetAssetList().push_back(asset);
+    return asset;
+}
+
+Asset * Asset::LoadMP3(const char * name, const char *filename)  {
+    QUrl * url = new QUrl(filename);
+    if (!url->isValid()) {
+        delete url;
+        return 0;
+    }
+    Asset * asset = new Asset(name, (void *)url);
     Asset::GetAssetList().push_back(asset);
     return asset;
 }

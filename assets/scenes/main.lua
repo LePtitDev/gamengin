@@ -17,6 +17,8 @@ LoadAsset("texture:8", "assets/materials/8.png")
 LoadAsset("texture:9", "assets/materials/9.png")
 LoadAsset("texture:cursor", "assets/materials/cursor.png")
 
+LoadAsset("sound:main", "assets/sounds/7th-born-son.mp3")
+
 LoadAsset("script:gamestate", "assets/scripts/gamestate.lua")
 LoadAsset("script:chessboard", "assets/scripts/chessboard.lua")
 LoadAsset("script:piecemoving", "assets/scripts/piecemoving.lua")
@@ -60,3 +62,5 @@ GameObject.Instanciate("prefab:chessboard")
 GameObject.Instanciate("prefab:hud-restart")
 GameObject.Instanciate("prefab:hud-timer")
 GameObject.Instanciate("prefab:turn-pointer")
+
+Sound.Play("sound:main")

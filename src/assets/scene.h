@@ -9,6 +9,7 @@
 #include <vector>
 #include <QTime>
 #include <QOpenGLShaderProgram>
+#include <QMediaPlayer>
 
 class Scene {
 
@@ -19,6 +20,9 @@ public:
 
     // Started time
     static QTime startedTime;
+
+    // Media player
+    static QMediaPlayer player;
 
 private:
 
