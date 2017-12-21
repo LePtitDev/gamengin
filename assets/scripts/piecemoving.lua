@@ -34,15 +34,13 @@ function mouseRelease(button, x, y)
             for i = 1, #hits, 4 do
                 if (GameObject.GetName(hits[i]) == "Chessboard") then
                     posi, posj = split(Script.CallFunction(chessboard, "coordinatesToPosition", hits[i + 1], hits[i + 2], hits[i + 3]))
-                    Script.CallFunction(GameObject.GetComponent(GameObject.Find("GameState"), "script:gamestate"), "setState", selected.i, selected.j, tonumber(posi), tonumber(posj))
+                    if (tonumber(posi) == selected.i) and (tonumber(posj) == selected.j) then
+                    else
+                        Script.CallFunction(GameObject.GetComponent(GameObject.Find("GameState"), "script:gamestate"), "setState", selected.i, selected.j, tonumber(posi), tonumber(posj))
+                    end
                 end
             end
             selected = nil
         end
     end
-end
-
--- Mouse press & move callback
-function mouseMove(x, y)
-    
 end

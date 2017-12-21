@@ -12,9 +12,9 @@ CameraRTSController::CameraRTSController(GameObject *parent) :
     zoomSpeed(0.1f),
     maxZoom(2.0f),
     minZoom(0.5f),
-    rotation(0.0f)
+    rotation(90)
 {
-    zoom = minZoom;
+    zoom = maxZoom;
 }
 
 void CameraRTSController::update() {
