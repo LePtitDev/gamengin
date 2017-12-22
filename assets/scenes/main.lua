@@ -19,7 +19,7 @@ LoadAsset("texture:cursor", "assets/materials/cursor.png")
 LoadAsset("texture:sound", "assets/materials/sound.png")
 LoadAsset("texture:mute", "assets/materials/mute.png")
 
-LoadAsset("sound:main", "assets/sounds/7th-born-son.mp3")
+LoadAsset("sound:main", "assets/sounds/gymnopedie.mp3")
 
 LoadAsset("script:gamestate", "assets/scripts/gamestate.lua")
 LoadAsset("script:chessboard", "assets/scripts/chessboard.lua")
