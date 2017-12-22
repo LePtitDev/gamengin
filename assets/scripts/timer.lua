@@ -15,6 +15,6 @@ function update()
     time = GetTime() - startTime
     Material.Assign(GameObject.GetComponent(dmin, "Material"), "texture:" .. math.floor(time / 600))
     Material.Assign(GameObject.GetComponent(min, "Material"), "texture:" .. (math.floor(time / 60) % 10))
-    Material.Assign(GameObject.GetComponent(dsec, "Material"), "texture:" .. (math.floor(time / 10) % 10))
+    Material.Assign(GameObject.GetComponent(dsec, "Material"), "texture:" .. (math.floor(time / 10) % 6))
     Material.Assign(GameObject.GetComponent(sec, "Material"), "texture:" .. (math.floor(time) % 10))
 end
